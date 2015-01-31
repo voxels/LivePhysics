@@ -9,12 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import <AVFoundation/AVFoundation.h>
 
-
 @interface ViewController : NSViewController
-{
-    AVCaptureSession *session;
-    AVCaptureVideoPreviewLayer *previewLayer;
-}
 
 @property (weak) IBOutlet NSView *captureView;
 

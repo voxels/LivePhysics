@@ -1,59 +1,55 @@
 //
-//  ViewController.m
+//  OCVCaptureModel.m
 //  LivePhysics
 //
-//  Created by Voxels on 1/27/15.
+//  Created by Voxels on 1/31/15.
 //  Copyright (c) 2015 Noise Derived. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "OCVCaptureModel.h"
+#import <AVFoundation/AVFoundation.h>
 #import <CoreVideo/CoreVideo.h>
-#import <OpenGL/OpenGL.h>
-
 #import <Accelerate/Accelerate.h>
 #import "Keypoint.h"
 #import "OCVSimpleBlobs.h"
 #import "OutScene.h"
+
+const CGFloat kDetectSessionWidth = 800.f;
+const CGFloat kDetectSessionHeight = 600.f;
 
 const CGFloat kDetectMinThresh = 0.f;
 const CGFloat kDetectMaxThresh = 70.f;
 const NSInteger kDetectThreshStep = 2;
 const CGFloat kDetectMinDist = 30.f;
 
-@interface ViewController () <AVCaptureVideoDataOutputSampleBufferDelegate>
+@interface OCVCaptureModel () <AVCaptureVideoDataOutputSampleBufferDelegate>
 
-@property (assign, nonatomic) unsigned long lastTime;
-@property (strong, nonatomic) OutScene *outScene;
 
 @end
 
-@implementation ViewController
-
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self.view setAcceptsTouchEvents:YES];
-    
-    if(!_outScene )
-    {
-        self.outScene = [[OutScene alloc] initWithSize:CGSizeMake(800, 600)];
-    }
-    
-    [self setupAVSession];
-    [self setupCamTexture];
-    [session startRunning];
-}
-
-- (void) setupCamTexture
+@implementation OCVCaptureModel
++ (instancetype) sharedModel
 {
-    NSLog(@"Setup camera texture");
-    AVCaptureInput *input = [session.inputs objectAtIndex:0];
-    AVCaptureInputPort *port = [input.ports objectAtIndex:0];
-    CMFormatDescriptionRef formatDescription = port.formatDescription;
-    CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(formatDescription);
-    self.outScene.cameraTexture = [[SKMutableTexture alloc] initWithSize:CGSizeMake(dimensions.width, dimensions.height) pixelFormat:kCVPixelFormatType_32RGBA];
+    static id shared;
+    static dispatch_once_t token;
+    dispatch_once(&token, ^{
+        shared = [[self alloc] init];
+    });
+    return shared;
 }
 
+
+- (id) init
+{
+    self = [super init];
+    if( self )
+    {
+        [self setupAVSession];
+        [session startRunning];
+    }
+
+    return self;
+}
 
 - (void) setupAVSession
 {
@@ -89,18 +85,7 @@ const CGFloat kDetectMinDist = 30.f;
     
     NSLog(@"inputs: %@", session.inputs);
     NSLog(@"outputs: %@", session.outputs);
-    
-    previewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:session];
-    [previewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    [previewLayer setFrame:[self.captureView bounds]];
-    [[previewLayer connection] setAutomaticallyAdjustsVideoMirroring:NO];
-    [[previewLayer connection] setVideoMirrored:YES];
-    
-    CALayer *rootLayer = [self.captureView layer];
-    [rootLayer setBackgroundColor:CGColorGetConstantColor(kCGColorBlack)];
-    [rootLayer addSublayer:previewLayer];
 }
-
 
 #pragma mark - AVCaptureVideoDataOutputSampleBufferDelegate
 // This might be faster with vImage, but there are no reference docs.
@@ -145,26 +130,33 @@ const CGFloat kDetectMinDist = 30.f;
     cv::vector<cv::KeyPoint> keyPoints;
     cv::vector< cv::vector <cv::Point> >  approxContours;
     
-//    CGColorSpaceRef grayColorSpace = CGColorSpaceCreateDeviceGray();
-//    CGContextRef context = CGBitmapContextCreate(lumaBuffer, width, height, 8, bytesPerRow, grayColorSpace, kCGImageAlphaNone);
+    //    CGColorSpaceRef grayColorSpace = CGColorSpaceCreateDeviceGray();
+    //    CGContextRef context = CGBitmapContextCreate(lumaBuffer, width, height, 8, bytesPerRow, grayColorSpace, kCGImageAlphaNone);
     
     vImage_Buffer imagebuf = {lumaBuffer, height, width, bytesPerRow};
     cv::Mat grayImage((int)imagebuf.height, (int)imagebuf.width, CV_8U, imagebuf.data, imagebuf.rowBytes);
-
+    
     detect(grayImage, &keyPoints, &approxContours, kDetectMinThresh, kDetectMaxThresh, kDetectThreshStep, kDetectMinDist);
     
-    [self.outScene addKeyPoints:[self recordKeypoints:keyPoints]];
-    [self.outScene addContours:[self recordContours:approxContours]];
+    if( [self.delegate respondsToSelector:@selector(captureModelDidFindKeypoints:)] )
+    {
+        [self.delegate captureModelDidFindKeypoints:[self recordKeypoints:keyPoints]];
+    }
     
-//    CVPixelBufferUnlockBaseAddress( imageBuffer, 0 );
-//    CGContextRelease(context);
+    if( [self.delegate respondsToSelector:@selector(captureModelDidFindContours:)] )
+    {
+        [self.delegate captureModelDidFindContours:[self recordContours:approxContours]];
+    }
+    
+    //    CVPixelBufferUnlockBaseAddress( imageBuffer, 0 );
+    //    CGContextRelease(context);
 }
 
 
 - (void) toCameraTexture:(CMSampleBufferRef)sampleBuffer
 {
     CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-//    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+    //    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
     
     unsigned long bufferHeight = CVPixelBufferGetHeight(pixelBuffer);
     unsigned long bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
@@ -189,10 +181,10 @@ const CGFloat kDetectMinDist = 30.f;
         rgbBuffer[(y*bytesPerPixel)+3] = 0xff;
     }
     
-    [self.outScene.cameraTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
-        NSLog(@"made texture");
-        memcpy(pixelData, rgbBuffer, lengthInBytes);
-    }];
+//    [self.outScene.cameraTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
+//        NSLog(@"made texture");
+//        memcpy(pixelData, rgbBuffer, lengthInBytes);
+//    }];
 }
 
 - (NSArray *) recordKeypoints:(cv::vector<cv::KeyPoint>) keyPoints
@@ -233,26 +225,6 @@ const CGFloat kDetectMinDist = 30.f;
     }
     
     return [NSArray arrayWithArray:retval];
-}
-
-
-#pragma mark - View controller
-- (BOOL)acceptsFirstResponder
-{
-    return YES;
-}
-
-- (void) mouseDown:(NSEvent *)theEvent
-{
-    [super mouseDown:theEvent];
-    
-    NSLog(@"Mouse Down" );
-}
-
-- (void)setRepresentedObject:(id)representedObject {
-    [super setRepresentedObject:representedObject];
-
-    // Update the view, if already loaded.
 }
 
 
