@@ -34,4 +34,4 @@
 #endif /* defined(__LivePhysics__OCVSimpleBlobs__) */
 
 
-void detect( cv::Mat image );
+void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv::vector <cv::Point> >  *_approxContours );

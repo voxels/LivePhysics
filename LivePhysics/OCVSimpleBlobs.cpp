@@ -11,11 +11,11 @@
 using namespace cv;
 using namespace std;
 
-void detect( cv::Mat image )
+void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv::vector <cv::Point> >  *_approxContours )
 {
     const char *wndNameOut = "Out";
     
-    Mat src, gray, thresh, binary;
+    Mat src, gray, thresh, inverted;
     Mat out;
     vector<KeyPoint> keyPoints;
     vector< vector <Point> > contours;
@@ -43,21 +43,24 @@ void detect( cv::Mat image )
     
     SimpleBlobDetector blobDetector = SimpleBlobDetector(params);
     ;
-    blobDetector.detect( image, keyPoints );
-    drawKeypoints( image, keyPoints, out, Scalar(0,255,0), DrawMatchesFlags::DEFAULT);
-    Canny( image, image, 0, 150, 3 );
+    blobDetector.detect( image, *_keyPoints );
+    drawKeypoints( image, *_keyPoints, out, Scalar(0,255,0), DrawMatchesFlags::DEFAULT);
+    Canny( image, thresh, 0, 150, 3 );
 
-    findContours(image, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE);
+    findContours(thresh, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE);
 
-    approxContours.resize( contours.size() );
+    approxContours.resize(contours.size());
 
     for( int i = 0; i < contours.size(); ++i )
     {
-        approxPolyDP( Mat(contours[i]), approxContours[i], 4, 1 );
+        approxPolyDP( Mat(contours[i]),  approxContours[i], 4, 1 );
 //        drawContours( out, contours, i, Scalar(rand()&255, rand()&255, rand()&255) );
         drawContours( out, approxContours, i, Scalar(rand()&255, rand()&255, rand()&255) );
     }
-    cout << "Keypoints " << keyPoints.size() << " Countours " << contours.size() << endl;
+    
+    *_approxContours = approxContours;
+    
+    cout << "Keypoints " << keyPoints.size() << " Countours " << approxContours.size() << endl;
 
     imshow( wndNameOut, out );
 }

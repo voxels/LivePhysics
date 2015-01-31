@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import <CoreVideo/CoreVideo.h>
 #import <Accelerate/Accelerate.h>
+#import "Keypoint.h"
 
 #ifdef check
 #undef check
@@ -16,6 +17,7 @@
 #import "OCVSimpleBlobs.h"
 
 #define clamp(a) (a>255?255:(a<0?0:a));
+
 
 @interface ViewController () <AVCaptureVideoDataOutputSampleBufferDelegate>
 
@@ -146,8 +148,13 @@ cv::Mat* YUV2RGB(cv::Mat *src){
     vImage_Buffer imagebuf = {lumaBuffer, height, width, bytesPerRow};
     cv::Mat grayImage((int)imagebuf.height, (int)imagebuf.width, CV_8U, imagebuf.data, imagebuf.rowBytes);
     
-    detect(grayImage);
+    cv::vector<cv::KeyPoint> keyPoints;
+    cv::vector< cv::vector <cv::Point> >  approxContours;
     
+    detect(grayImage, &keyPoints, &approxContours);
+    
+    NSArray *keypointsArray = [self convertKeypoints:keyPoints];
+    NSLog(@"Transferred KeyPoints: %lu", keypointsArray.count);
     CVPixelBufferUnlockBaseAddress( imageBuffer, 0 );
 //    CGContextRelease(context);
 }
@@ -155,6 +162,27 @@ cv::Mat* YUV2RGB(cv::Mat *src){
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didDropSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
     NSLog(@"Did drop");
+}
+
+- (NSArray *) convertKeypoints:(cv::vector<cv::KeyPoint>) keyPoints
+{
+    NSMutableArray *retval = [NSMutableArray array];
+    
+    cv::vector<cv::KeyPoint>::iterator it;
+    
+    for( it= keyPoints.begin(); it!= keyPoints.end();it++)
+    {
+        Keypoint *thisKeypoint = [[Keypoint alloc] init];
+        thisKeypoint.angle = it->angle;
+        thisKeypoint.class_id = it->class_id;
+        thisKeypoint.octave = it->octave;
+        thisKeypoint.pt = CGPointMake(it->pt.x, it->pt.y);
+        thisKeypoint.response = it->response;
+        thisKeypoint.size = it->size;
+        [retval addObject:thisKeypoint];
+    }
+    
+    return [NSArray arrayWithArray:retval];
 }
 
 
