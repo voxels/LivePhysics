@@ -1,0 +1,515 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1E4A65121A789864002B8A71 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E4A65111A789864002B8A71 /* AVFoundation.framework */; };
+		1E4A65141A78986B002B8A71 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E4A65131A78986B002B8A71 /* CoreMedia.framework */; };
+		1E4A65161A789873002B8A71 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E4A65151A789873002B8A71 /* CoreVideo.framework */; };
+		1E76DEAC1A787AA40073075F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DEAB1A787AA40073075F /* AppDelegate.m */; };
+		1E76DEAE1A787AA40073075F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DEAD1A787AA40073075F /* main.m */; };
+		1E76DEB11A787AA40073075F /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DEB01A787AA40073075F /* ViewController.mm */; };
+		1E76DEB31A787AA40073075F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E76DEB21A787AA40073075F /* Images.xcassets */; };
+		1E76DEB61A787AA40073075F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E76DEB41A787AA40073075F /* Main.storyboard */; };
+		1E76DEC21A787AA40073075F /* LivePhysicsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DEC11A787AA40073075F /* LivePhysicsTests.m */; };
+		1E76DEDB1A78803D0073075F /* OCVSimpleBlobs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DED91A78803D0073075F /* OCVSimpleBlobs.cpp */; };
+		1EDCE8FB1A7CB27B0088BE13 /* libopencv_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE8FA1A7CB27B0088BE13 /* libopencv_core.a */; };
+		1EDCE92D1A7CB8FD0088BE13 /* CUDA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE92C1A7CB8FD0088BE13 /* CUDA.framework */; };
+		1EDCE92F1A7CB9380088BE13 /* libcuda.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE92E1A7CB9380088BE13 /* libcuda.dylib */; };
+		1EDCE9341A7CB97B0088BE13 /* libopencv_features2d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE9321A7CB97B0088BE13 /* libopencv_features2d.a */; };
+		1EDCE9351A7CB97B0088BE13 /* libopencv_objdetect.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE9331A7CB97B0088BE13 /* libopencv_objdetect.a */; };
+		1EDCE9371A7CB9980088BE13 /* libopencv_flann.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE9361A7CB9980088BE13 /* libopencv_flann.a */; };
+		1EDCE9391A7CB9C10088BE13 /* libopencv_imgproc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE9381A7CB9C10088BE13 /* libopencv_imgproc.a */; };
+		1EDCE93B1A7CB9E70088BE13 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE93A1A7CB9E70088BE13 /* libz.dylib */; };
+		1EDCE93F1A7CBABE0088BE13 /* libcudart_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE93E1A7CBABE0088BE13 /* libcudart_static.a */; };
+		1EDCE9411A7CC13C0088BE13 /* libopencv_highgui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE9401A7CC13C0088BE13 /* libopencv_highgui.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1E76DEBC1A787AA40073075F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1E76DE9D1A787AA40073075F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E76DEA41A787AA40073075F;
+			remoteInfo = LivePhysics;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1E4A65111A789864002B8A71 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		1E4A65131A78986B002B8A71 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		1E4A65151A789873002B8A71 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		1E76DEA51A787AA40073075F /* LivePhysics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LivePhysics.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E76DEA91A787AA40073075F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E76DEAA1A787AA40073075F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1E76DEAB1A787AA40073075F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		1E76DEAD1A787AA40073075F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1E76DEAF1A787AA40073075F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		1E76DEB01A787AA40073075F /* ViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ViewController.mm; sourceTree = "<group>"; };
+		1E76DEB21A787AA40073075F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		1E76DEB51A787AA40073075F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1E76DEBB1A787AA40073075F /* LivePhysicsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LivePhysicsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E76DEC01A787AA40073075F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E76DEC11A787AA40073075F /* LivePhysicsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LivePhysicsTests.m; sourceTree = "<group>"; };
+		1E76DED91A78803D0073075F /* OCVSimpleBlobs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OCVSimpleBlobs.cpp; sourceTree = "<group>"; };
+		1E76DEDA1A78803D0073075F /* OCVSimpleBlobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCVSimpleBlobs.h; sourceTree = "<group>"; };
+		1EDCE8FA1A7CB27B0088BE13 /* libopencv_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_core.a; path = "../../../opencv-2.4.10/StaticLibs/lib/libopencv_core.a"; sourceTree = "<group>"; };
+		1EDCE92C1A7CB8FD0088BE13 /* CUDA.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CUDA.framework; path = /Library/Frameworks/CUDA.framework; sourceTree = "<absolute>"; };
+		1EDCE92E1A7CB9380088BE13 /* libcuda.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcuda.dylib; path = /usr/local/cuda/lib/libcuda.dylib; sourceTree = "<absolute>"; };
+		1EDCE9321A7CB97B0088BE13 /* libopencv_features2d.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_features2d.a; path = "../../../opencv-2.4.10/StaticLibs/lib/libopencv_features2d.a"; sourceTree = "<group>"; };
+		1EDCE9331A7CB97B0088BE13 /* libopencv_objdetect.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_objdetect.a; path = "../../../opencv-2.4.10/StaticLibs/lib/libopencv_objdetect.a"; sourceTree = "<group>"; };
+		1EDCE9361A7CB9980088BE13 /* libopencv_flann.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_flann.a; path = "../../../opencv-2.4.10/StaticLibs/lib/libopencv_flann.a"; sourceTree = "<group>"; };
+		1EDCE9381A7CB9C10088BE13 /* libopencv_imgproc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_imgproc.a; path = "../../../opencv-2.4.10/StaticLibs/lib/libopencv_imgproc.a"; sourceTree = "<group>"; };
+		1EDCE93A1A7CB9E70088BE13 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		1EDCE93E1A7CBABE0088BE13 /* libcudart_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcudart_static.a; path = "/Developer/NVIDIA/CUDA-6.5/lib/libcudart_static.a"; sourceTree = "<absolute>"; };
+		1EDCE9401A7CC13C0088BE13 /* libopencv_highgui.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_highgui.a; path = "../../../opencv-2.4.10/StaticLibs/lib/libopencv_highgui.a"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1E76DEA21A787AA40073075F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EDCE93B1A7CB9E70088BE13 /* libz.dylib in Frameworks */,
+				1E4A65161A789873002B8A71 /* CoreVideo.framework in Frameworks */,
+				1EDCE9411A7CC13C0088BE13 /* libopencv_highgui.a in Frameworks */,
+				1EDCE93F1A7CBABE0088BE13 /* libcudart_static.a in Frameworks */,
+				1EDCE92F1A7CB9380088BE13 /* libcuda.dylib in Frameworks */,
+				1EDCE92D1A7CB8FD0088BE13 /* CUDA.framework in Frameworks */,
+				1EDCE9391A7CB9C10088BE13 /* libopencv_imgproc.a in Frameworks */,
+				1EDCE9341A7CB97B0088BE13 /* libopencv_features2d.a in Frameworks */,
+				1EDCE9371A7CB9980088BE13 /* libopencv_flann.a in Frameworks */,
+				1EDCE8FB1A7CB27B0088BE13 /* libopencv_core.a in Frameworks */,
+				1E4A65141A78986B002B8A71 /* CoreMedia.framework in Frameworks */,
+				1E4A65121A789864002B8A71 /* AVFoundation.framework in Frameworks */,
+				1EDCE9351A7CB97B0088BE13 /* libopencv_objdetect.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E76DEB81A787AA40073075F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1E76DE9C1A787AA40073075F = {
+			isa = PBXGroup;
+			children = (
+				1E76DEA71A787AA40073075F /* LivePhysics */,
+				1E76DEBE1A787AA40073075F /* LivePhysicsTests */,
+				1E76DEA61A787AA40073075F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1E76DEA61A787AA40073075F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1E76DEA51A787AA40073075F /* LivePhysics.app */,
+				1E76DEBB1A787AA40073075F /* LivePhysicsTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1E76DEA71A787AA40073075F /* LivePhysics */ = {
+			isa = PBXGroup;
+			children = (
+				1E76DEAA1A787AA40073075F /* AppDelegate.h */,
+				1E76DEAB1A787AA40073075F /* AppDelegate.m */,
+				1E76DEAF1A787AA40073075F /* ViewController.h */,
+				1E76DEB01A787AA40073075F /* ViewController.mm */,
+				1E76DED91A78803D0073075F /* OCVSimpleBlobs.cpp */,
+				1EDCE9401A7CC13C0088BE13 /* libopencv_highgui.a */,
+				1E76DEDA1A78803D0073075F /* OCVSimpleBlobs.h */,
+				1E76DEB21A787AA40073075F /* Images.xcassets */,
+				1E76DEB41A787AA40073075F /* Main.storyboard */,
+				1E76DEA81A787AA40073075F /* Supporting Files */,
+			);
+			path = LivePhysics;
+			sourceTree = "<group>";
+		};
+		1E76DEA81A787AA40073075F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1EDCE93A1A7CB9E70088BE13 /* libz.dylib */,
+				1EDCE9381A7CB9C10088BE13 /* libopencv_imgproc.a */,
+				1EDCE9361A7CB9980088BE13 /* libopencv_flann.a */,
+				1EDCE9321A7CB97B0088BE13 /* libopencv_features2d.a */,
+				1EDCE9331A7CB97B0088BE13 /* libopencv_objdetect.a */,
+				1EDCE93E1A7CBABE0088BE13 /* libcudart_static.a */,
+				1EDCE92E1A7CB9380088BE13 /* libcuda.dylib */,
+				1EDCE8FA1A7CB27B0088BE13 /* libopencv_core.a */,
+				1EDCE92C1A7CB8FD0088BE13 /* CUDA.framework */,
+				1E4A65151A789873002B8A71 /* CoreVideo.framework */,
+				1E4A65131A78986B002B8A71 /* CoreMedia.framework */,
+				1E4A65111A789864002B8A71 /* AVFoundation.framework */,
+				1E76DEA91A787AA40073075F /* Info.plist */,
+				1E76DEAD1A787AA40073075F /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1E76DEBE1A787AA40073075F /* LivePhysicsTests */ = {
+			isa = PBXGroup;
+			children = (
+				1E76DEC11A787AA40073075F /* LivePhysicsTests.m */,
+				1E76DEBF1A787AA40073075F /* Supporting Files */,
+			);
+			path = LivePhysicsTests;
+			sourceTree = "<group>";
+		};
+		1E76DEBF1A787AA40073075F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1E76DEC01A787AA40073075F /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1E76DEA41A787AA40073075F /* LivePhysics */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E76DEC51A787AA40073075F /* Build configuration list for PBXNativeTarget "LivePhysics" */;
+			buildPhases = (
+				1E76DEA11A787AA40073075F /* Sources */,
+				1E76DEA21A787AA40073075F /* Frameworks */,
+				1E76DEA31A787AA40073075F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LivePhysics;
+			productName = LivePhysics;
+			productReference = 1E76DEA51A787AA40073075F /* LivePhysics.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1E76DEBA1A787AA40073075F /* LivePhysicsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E76DEC81A787AA40073075F /* Build configuration list for PBXNativeTarget "LivePhysicsTests" */;
+			buildPhases = (
+				1E76DEB71A787AA40073075F /* Sources */,
+				1E76DEB81A787AA40073075F /* Frameworks */,
+				1E76DEB91A787AA40073075F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1E76DEBD1A787AA40073075F /* PBXTargetDependency */,
+			);
+			name = LivePhysicsTests;
+			productName = LivePhysicsTests;
+			productReference = 1E76DEBB1A787AA40073075F /* LivePhysicsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1E76DE9D1A787AA40073075F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Noise Derived";
+				TargetAttributes = {
+					1E76DEA41A787AA40073075F = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					1E76DEBA1A787AA40073075F = {
+						CreatedOnToolsVersion = 6.1.1;
+						TestTargetID = 1E76DEA41A787AA40073075F;
+					};
+				};
+			};
+			buildConfigurationList = 1E76DEA01A787AA40073075F /* Build configuration list for PBXProject "LivePhysics" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1E76DE9C1A787AA40073075F;
+			productRefGroup = 1E76DEA61A787AA40073075F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1E76DEA41A787AA40073075F /* LivePhysics */,
+				1E76DEBA1A787AA40073075F /* LivePhysicsTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1E76DEA31A787AA40073075F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E76DEB31A787AA40073075F /* Images.xcassets in Resources */,
+				1E76DEB61A787AA40073075F /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E76DEB91A787AA40073075F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1E76DEA11A787AA40073075F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E76DEB11A787AA40073075F /* ViewController.mm in Sources */,
+				1E76DEAE1A787AA40073075F /* main.m in Sources */,
+				1E76DEAC1A787AA40073075F /* AppDelegate.m in Sources */,
+				1E76DEDB1A78803D0073075F /* OCVSimpleBlobs.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E76DEB71A787AA40073075F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E76DEC21A787AA40073075F /* LivePhysicsTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1E76DEBD1A787AA40073075F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E76DEA41A787AA40073075F /* LivePhysics */;
+			targetProxy = 1E76DEBC1A787AA40073075F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1E76DEB41A787AA40073075F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E76DEB51A787AA40073075F /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1E76DEC31A787AA40073075F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1E76DEC41A787AA40073075F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1E76DEC61A787AA40073075F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++98";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				GCC_INPUT_FILETYPE = automatic;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/include,
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/cuda/include,
+				);
+				INFOPLIST_FILE = LivePhysics/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/voxels/Documents/opencv-2.4.10/StaticLibs/lib",
+					/usr/local/cuda/lib,
+					"/Developer/NVIDIA/CUDA-6.5/lib",
+				);
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1E76DEC71A787AA40073075F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++98";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				GCC_INPUT_FILETYPE = automatic;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/include,
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/cuda/include,
+				);
+				INFOPLIST_FILE = LivePhysics/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/voxels/Documents/opencv-2.4.10/StaticLibs/lib",
+					/usr/local/cuda/lib,
+					"/Developer/NVIDIA/CUDA-6.5/lib",
+				);
+				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		1E76DEC91A787AA40073075F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = LivePhysicsTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LivePhysics.app/Contents/MacOS/LivePhysics";
+			};
+			name = Debug;
+		};
+		1E76DECA1A787AA40073075F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = LivePhysicsTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LivePhysics.app/Contents/MacOS/LivePhysics";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1E76DEA01A787AA40073075F /* Build configuration list for PBXProject "LivePhysics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E76DEC31A787AA40073075F /* Debug */,
+				1E76DEC41A787AA40073075F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1E76DEC51A787AA40073075F /* Build configuration list for PBXNativeTarget "LivePhysics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E76DEC61A787AA40073075F /* Debug */,
+				1E76DEC71A787AA40073075F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1E76DEC81A787AA40073075F /* Build configuration list for PBXNativeTarget "LivePhysicsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E76DEC91A787AA40073075F /* Debug */,
+				1E76DECA1A787AA40073075F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1E76DE9D1A787AA40073075F /* Project object */;
+}
