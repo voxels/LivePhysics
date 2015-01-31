@@ -668,7 +668,7 @@
         <scene sceneID="2Yb-su-EbA">
             <objects>
                 <viewController id="4Lx-hG-4uR" customClass="OutSceneViewController" sceneMemberID="viewController">
-                    <view key="view" id="86Q-HV-NAk" customClass="SKView">
+                    <view key="view" wantsLayer="YES" id="86Q-HV-NAk" customClass="SKView">
                         <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </view>

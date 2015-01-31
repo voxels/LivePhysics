@@ -21,20 +21,19 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.captureModel = [OCVCaptureModel sharedModel];
+    self.captureModel.delegate = self;
+
     if(!_outScene )
     {
         self.outScene = [[OutScene alloc] initWithSize:CGSizeMake(800, 600)];
+        self.outScene.scaleMode = SKSceneScaleModeAspectFit;
     }
-    [self setupCamTexture];
     
-    self.captureModel = [OCVCaptureModel sharedModel];
-    self.captureModel.delegate = self;
-}
-
-- (void) setupCamTexture
-{
-    NSLog(@"Setup camera texture");
-    self.outScene.cameraTexture = [[SKMutableTexture alloc] initWithSize:CGSizeMake(kDetectSessionWidth, kDetectSessionHeight) pixelFormat:kCVPixelFormatType_32RGBA];
+    self.outSceneView.ignoresSiblingOrder = YES;
+    self.outSceneView.showsFPS = YES;
+    self.outSceneView.showsNodeCount = YES;
+    [self.outSceneView presentScene:self.outScene];
 }
 
 
@@ -50,6 +49,5 @@
 {
     [self.outScene addContours:contours];
 }
-
 
 @end

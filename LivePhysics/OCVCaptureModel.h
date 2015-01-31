@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+#import <SpriteKit/SpriteKit.h>
 
 extern const CGFloat kDetectSessionWidth;
 extern const CGFloat kDetectSessionHeight;
@@ -16,7 +17,7 @@ extern const CGFloat kDetectSessionHeight;
 
 - (void) captureModelDidFindKeypoints:(NSArray *)keypoints;
 - (void) captureModelDidFindContours:(NSArray *)contours;
-- (void) setCameraTexture;
+- (void) modifyCameraTextureWithMutableTexture:(SKMutableTexture *)cameraTexture;
 
 @end
 

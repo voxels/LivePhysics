@@ -11,8 +11,6 @@
 
 @interface OutScene : SKScene
 
-@property (strong) SKMutableTexture *cameraTexture;
-
 - (void) addKeyPoints:(NSArray *) keypoints;
 - (void) addContours:(NSArray *)contours;
 

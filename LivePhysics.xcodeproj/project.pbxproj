@@ -15,6 +15,7 @@
 		1E65663B1A7D5F7E00B0A091 /* OutScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E65663A1A7D5F7E00B0A091 /* OutScene.m */; };
 		1E65663E1A7D672C00B0A091 /* OutSceneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E65663D1A7D672C00B0A091 /* OutSceneViewController.m */; };
 		1E6566411A7D67A200B0A091 /* OCVCaptureModel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1E6566401A7D67A200B0A091 /* OCVCaptureModel.mm */; };
+		1E6566441A7D73D300B0A091 /* CaptureTextureModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E6566431A7D73D300B0A091 /* CaptureTextureModel.m */; };
 		1E76DEAC1A787AA40073075F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DEAB1A787AA40073075F /* AppDelegate.m */; };
 		1E76DEAE1A787AA40073075F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DEAD1A787AA40073075F /* main.m */; };
 		1E76DEB11A787AA40073075F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DEB01A787AA40073075F /* ViewController.m */; };
@@ -57,6 +58,8 @@
 		1E65663D1A7D672C00B0A091 /* OutSceneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OutSceneViewController.m; sourceTree = "<group>"; };
 		1E65663F1A7D67A200B0A091 /* OCVCaptureModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCVCaptureModel.h; sourceTree = "<group>"; };
 		1E6566401A7D67A200B0A091 /* OCVCaptureModel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OCVCaptureModel.mm; sourceTree = "<group>"; };
+		1E6566421A7D73D300B0A091 /* CaptureTextureModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptureTextureModel.h; sourceTree = "<group>"; };
+		1E6566431A7D73D300B0A091 /* CaptureTextureModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureTextureModel.m; sourceTree = "<group>"; };
 		1E76DEA51A787AA40073075F /* LivePhysics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LivePhysics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E76DEA91A787AA40073075F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1E76DEAA1A787AA40073075F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -124,6 +127,8 @@
 				1E76DED91A78803D0073075F /* OCVSimpleBlobs.cpp */,
 				1E65663F1A7D67A200B0A091 /* OCVCaptureModel.h */,
 				1E6566401A7D67A200B0A091 /* OCVCaptureModel.mm */,
+				1E6566421A7D73D300B0A091 /* CaptureTextureModel.h */,
+				1E6566431A7D73D300B0A091 /* CaptureTextureModel.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -320,6 +325,7 @@
 				1E76DEAC1A787AA40073075F /* AppDelegate.m in Sources */,
 				1E76DEDB1A78803D0073075F /* OCVSimpleBlobs.cpp in Sources */,
 				1E65662E1A7D4FAB00B0A091 /* Keypoint.m in Sources */,
+				1E6566441A7D73D300B0A091 /* CaptureTextureModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

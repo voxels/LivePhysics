@@ -13,6 +13,7 @@
 #import "Keypoint.h"
 #import "OCVSimpleBlobs.h"
 #import "OutScene.h"
+#import "CaptureTextureModel.h"
 
 const CGFloat kDetectSessionWidth = 800.f;
 const CGFloat kDetectSessionHeight = 600.f;
@@ -24,6 +25,7 @@ const CGFloat kDetectMinDist = 30.f;
 
 @interface OCVCaptureModel () <AVCaptureVideoDataOutputSampleBufferDelegate>
 
+@property (strong) CaptureTextureModel *textureModel;
 
 @end
 
@@ -38,17 +40,30 @@ const CGFloat kDetectMinDist = 30.f;
     return shared;
 }
 
-
 - (id) init
 {
     self = [super init];
     if( self )
     {
         [self setupAVSession];
+        [self setupCamTexture];
         [session startRunning];
     }
 
     return self;
+}
+
+- (void) setupCamTexture
+{
+    NSLog(@"Setup camera texture");
+    CaptureTextureModel *captureModel = [CaptureTextureModel sharedModel];
+    self.textureModel = captureModel;
+    AVCaptureInput *input = [session.inputs objectAtIndex:0];
+    AVCaptureInputPort *port = [input.ports objectAtIndex:0];
+    CMFormatDescriptionRef formatDescription = port.formatDescription;
+    CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(formatDescription);
+    NSLog(@"%i\t%i", dimensions.width, dimensions.height);
+    self.textureModel.cameraTexture = [[SKMutableTexture alloc] initWithSize:CGSizeMake(dimensions.width, dimensions.height) pixelFormat:kCVPixelFormatType_32RGBA];
 }
 
 - (void) setupAVSession
@@ -105,7 +120,7 @@ const CGFloat kDetectMinDist = 30.f;
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
     //convert from Core Media to Core Video
-    [self toSingleChannel:sampleBuffer];
+//    [self toSingleChannel:sampleBuffer];
     [self toCameraTexture:sampleBuffer];
 }
 
@@ -156,24 +171,23 @@ const CGFloat kDetectMinDist = 30.f;
 - (void) toCameraTexture:(CMSampleBufferRef)sampleBuffer
 {
     CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-    //    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
     
     unsigned long bufferHeight = CVPixelBufferGetHeight(pixelBuffer);
     unsigned long bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
-    uint8_t *rowBase = (uint8_t *)CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
+    //    unsigned long bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0);
+    unsigned char *rowBase = (unsigned char *)CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
     
     uint8_t *rgbBuffer = (uint8_t *)malloc(bufferWidth * bufferHeight * 4);
     uint8_t *yBuffer = rowBase;
-    uint8_t val;
     
     int bytesPerPixel = 4;
-    
     // for each byte in the input buffer, fill in the output buffer with four bytes
     // the first byte is the Alpha channel, then the next three contain the same
     // value of the input buffer
     for(int y = 0; y < bufferWidth*bufferHeight; y++)
     {
-        val = yBuffer[bufferWidth * bufferHeight - y];
+        uint8_t val = yBuffer[bufferWidth * bufferHeight - y];
         // Alpha channel
         
         // next three bytes same as input
@@ -181,10 +195,13 @@ const CGFloat kDetectMinDist = 30.f;
         rgbBuffer[(y*bytesPerPixel)+3] = 0xff;
     }
     
-//    [self.outScene.cameraTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
-//        NSLog(@"made texture");
-//        memcpy(pixelData, rgbBuffer, lengthInBytes);
-//    }];
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
+    
+    [self.textureModel.cameraTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
+        memcpy(pixelData, rgbBuffer, lengthInBytes);
+    }];
+    
+    free(rgbBuffer);
 }
 
 - (NSArray *) recordKeypoints:(cv::vector<cv::KeyPoint>) keyPoints
