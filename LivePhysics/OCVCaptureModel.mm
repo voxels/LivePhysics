@@ -120,7 +120,7 @@ const CGFloat kDetectMinDist = 30.f;
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
     //convert from Core Media to Core Video
-//    [self toSingleChannel:sampleBuffer];
+    [self toSingleChannel:sampleBuffer];
     [self toCameraTexture:sampleBuffer];
 }
 
@@ -171,7 +171,7 @@ const CGFloat kDetectMinDist = 30.f;
 - (void) toCameraTexture:(CMSampleBufferRef)sampleBuffer
 {
     CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+//    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
     
     unsigned long bufferHeight = CVPixelBufferGetHeight(pixelBuffer);
     unsigned long bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
