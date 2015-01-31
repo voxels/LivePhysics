@@ -23,15 +23,7 @@
 #include <opencv2/objdetect/objdetect.hpp>
 #include <opencv2/features2d/features2d.hpp>
 #include <opencv2/core/core.hpp>
-//#include <opencv2/highgui/highgui.hpp>
-//#include <opencv2/legacy/legacy.hpp>
-//#include <opencv2/legacy/compat.hpp>
-//#include <opencv2/flann/flann.hpp>
-//#include <opencv2/calib3d/calib3d.hpp>
-//#include <opencv2/nonfree/features2d.hpp>
-//#include <opencv2/nonfree/nonfree.hpp>
 
 #endif /* defined(__LivePhysics__OCVSimpleBlobs__) */
 
-
-void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv::vector <cv::Point> >  *_approxContours );
+void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv::vector <cv::Point> >  *_approxContours, float minThresh, float maxThresh, int threshStep, float minDistBetweenBlobs );

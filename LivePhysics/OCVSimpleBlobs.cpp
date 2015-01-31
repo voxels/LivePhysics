@@ -11,7 +11,7 @@
 using namespace cv;
 using namespace std;
 
-void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv::vector <cv::Point> >  *_approxContours )
+void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv::vector <cv::Point> >  *_approxContours, float minThresh, float maxThresh, int threshStep, float minDistBetweenBlobs )
 {
     const char *wndNameOut = "Out";
     
@@ -23,9 +23,9 @@ void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv
     vector< vector <Point> > approxContours;
     
     SimpleBlobDetector::Params params;
-    params.minThreshold = 0;
-    params.maxThreshold = 70;
-    params.thresholdStep = 1;
+    params.minThreshold = minThresh;
+    params.maxThreshold = maxThresh;
+    params.thresholdStep = threshStep;
     
     params.minArea = 10.0;
     params.minConvexity = 0.9;
@@ -34,7 +34,7 @@ void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv
     
     params.maxArea = 100.0;
     params.maxConvexity = 10;
-    params.minDistBetweenBlobs = 30.0;
+    params.minDistBetweenBlobs = minDistBetweenBlobs;
     params.filterByColor = false;
     params.filterByCircularity = false;
     

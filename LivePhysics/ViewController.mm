@@ -8,49 +8,52 @@
 
 #import "ViewController.h"
 #import <CoreVideo/CoreVideo.h>
+#import <OpenGL/OpenGL.h>
+
 #import <Accelerate/Accelerate.h>
 #import "Keypoint.h"
-
-#ifdef check
-#undef check
-#endif
 #import "OCVSimpleBlobs.h"
+#import "OutScene.h"
 
-#define clamp(a) (a>255?255:(a<0?0:a));
-
+const CGFloat kDetectMinThresh = 0.f;
+const CGFloat kDetectMaxThresh = 70.f;
+const NSInteger kDetectThreshStep = 2;
+const CGFloat kDetectMinDist = 30.f;
 
 @interface ViewController () <AVCaptureVideoDataOutputSampleBufferDelegate>
 
 @property (assign, nonatomic) unsigned long lastTime;
+@property (strong, nonatomic) OutScene *outScene;
 
 @end
 
 @implementation ViewController
 
-cv::Mat* YUV2RGB(cv::Mat *src){
-    cv::Mat *output = new cv::Mat(src->rows, src->cols, CV_8UC3);
-    for(int i=0;i<output->rows;i++)
-        for(int j=0;j<output->cols;j++){
-            // from Wikipedia
-            int c = src->data[i*src->cols*src->channels() + j*src->channels() + 0] - 16;
-            int d = src->data[i*src->cols*src->channels() + j*src->channels() + 1] - 128;
-            int e = src->data[i*src->cols*src->channels() + j*src->channels() + 2] - 128;
-            
-            output->data[i*src->cols*src->channels() + j*src->channels() + 0] = clamp((298*c+409*e+128)>>8);
-            output->data[i*src->cols*src->channels() + j*src->channels() + 1] = clamp((298*c-100*d-208*e+128)>>8);
-            output->data[i*src->cols*src->channels() + j*src->channels() + 2] = clamp((298*c+516*d+128)>>8);
-        }
-    
-    return output;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.view setAcceptsTouchEvents:YES];
-
+    
+    if(!_outScene )
+    {
+        self.outScene = [[OutScene alloc] initWithSize:CGSizeMake(800, 600)];
+    }
+    
     [self setupAVSession];
+    [self setupCamTexture];
     [session startRunning];
 }
+
+- (void) setupCamTexture
+{
+    NSLog(@"Setup camera texture");
+    AVCaptureInput *input = [session.inputs objectAtIndex:0];
+    AVCaptureInputPort *port = [input.ports objectAtIndex:0];
+    CMFormatDescriptionRef formatDescription = port.formatDescription;
+    CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(formatDescription);
+    self.outScene.cameraTexture = [[SKMutableTexture alloc] initWithSize:CGSizeMake(dimensions.width, dimensions.height) pixelFormat:kCVPixelFormatType_32RGBA];
+}
+
 
 - (void) setupAVSession
 {
@@ -101,7 +104,6 @@ cv::Mat* YUV2RGB(cv::Mat *src){
 
 #pragma mark - AVCaptureVideoDataOutputSampleBufferDelegate
 // This might be faster with vImage, but there are no reference docs.
-
 /*
  CVPixelBufferLockBaseAddress( pixelBuffer, 0 );
  int bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
@@ -119,52 +121,78 @@ cv::Mat* YUV2RGB(cv::Mat *src){
 {
     //convert from Core Media to Core Video
     [self toSingleChannel:sampleBuffer];
-}
-
-- (void) toSingleChannel:(CMSampleBufferRef)sampleBuffer
-{
-    CVImageBufferRef imageBuffer =  CMSampleBufferGetImageBuffer(sampleBuffer);
-    
-    CVPixelBufferLockBaseAddress(imageBuffer, 0);
-    
-    size_t width = CVPixelBufferGetWidthOfPlane(imageBuffer, 0);
-    
-    size_t height = CVPixelBufferGetHeightOfPlane(imageBuffer, 0);
-    
-    size_t bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 0);
-    
-    // extract intensity channel directly
-    
-    Pixel_8 *lumaBuffer = (Pixel_8*)CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
-    
-    // render the luma buffer on the layer with CoreGraphics
-    
-    // (create color space, create graphics context, render buffer)
-    
-//    CGColorSpaceRef grayColorSpace = CGColorSpaceCreateDeviceGray();
-//    CGContextRef context = CGBitmapContextCreate(lumaBuffer, width, height, 8, bytesPerRow, grayColorSpace, kCGImageAlphaNone);
-    
-    // delegate image processing to the delegate const vImage_Buffer image = {lumaBuffer, height, width, bytesPerRow};
-    vImage_Buffer imagebuf = {lumaBuffer, height, width, bytesPerRow};
-    cv::Mat grayImage((int)imagebuf.height, (int)imagebuf.width, CV_8U, imagebuf.data, imagebuf.rowBytes);
-    
-    cv::vector<cv::KeyPoint> keyPoints;
-    cv::vector< cv::vector <cv::Point> >  approxContours;
-    
-    detect(grayImage, &keyPoints, &approxContours);
-    
-    NSArray *keypointsArray = [self recordKeypoints:keyPoints];
-    NSArray *contoursArray = [self recordContours:approxContours];
-    
-    NSLog(@"Transferred KeyPoints: %lu, Contours:%lu", keypointsArray.count, contoursArray.count);
-
-    CVPixelBufferUnlockBaseAddress( imageBuffer, 0 );
-//    CGContextRelease(context);
+    [self toCameraTexture:sampleBuffer];
 }
 
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didDropSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
     NSLog(@"Did drop");
+}
+
+
+#pragma mark - Detection
+
+- (void) toSingleChannel:(CMSampleBufferRef)sampleBuffer
+{
+    CVImageBufferRef imageBuffer =  CMSampleBufferGetImageBuffer(sampleBuffer);
+    CVPixelBufferLockBaseAddress(imageBuffer, 0);
+    
+    size_t width = CVPixelBufferGetWidthOfPlane(imageBuffer, 0);
+    size_t height = CVPixelBufferGetHeightOfPlane(imageBuffer, 0);
+    size_t bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 0);
+    
+    Pixel_8 *lumaBuffer = (Pixel_8*)CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
+    cv::vector<cv::KeyPoint> keyPoints;
+    cv::vector< cv::vector <cv::Point> >  approxContours;
+    
+//    CGColorSpaceRef grayColorSpace = CGColorSpaceCreateDeviceGray();
+//    CGContextRef context = CGBitmapContextCreate(lumaBuffer, width, height, 8, bytesPerRow, grayColorSpace, kCGImageAlphaNone);
+    
+    vImage_Buffer imagebuf = {lumaBuffer, height, width, bytesPerRow};
+    cv::Mat grayImage((int)imagebuf.height, (int)imagebuf.width, CV_8U, imagebuf.data, imagebuf.rowBytes);
+
+    detect(grayImage, &keyPoints, &approxContours, kDetectMinThresh, kDetectMaxThresh, kDetectThreshStep, kDetectMinDist);
+    
+    [self.outScene addKeyPoints:[self recordKeypoints:keyPoints]];
+    [self.outScene addContours:[self recordContours:approxContours]];
+    
+//    CVPixelBufferUnlockBaseAddress( imageBuffer, 0 );
+//    CGContextRelease(context);
+}
+
+
+- (void) toCameraTexture:(CMSampleBufferRef)sampleBuffer
+{
+    CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+//    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+    
+    unsigned long bufferHeight = CVPixelBufferGetHeight(pixelBuffer);
+    unsigned long bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
+    uint8_t *rowBase = (uint8_t *)CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
+    
+    uint8_t *rgbBuffer = (uint8_t *)malloc(bufferWidth * bufferHeight * 4);
+    uint8_t *yBuffer = rowBase;
+    uint8_t val;
+    
+    int bytesPerPixel = 4;
+    
+    // for each byte in the input buffer, fill in the output buffer with four bytes
+    // the first byte is the Alpha channel, then the next three contain the same
+    // value of the input buffer
+    for(int y = 0; y < bufferWidth*bufferHeight; y++)
+    {
+        val = yBuffer[bufferWidth * bufferHeight - y];
+        // Alpha channel
+        
+        // next three bytes same as input
+        rgbBuffer[(y*bytesPerPixel)] = rgbBuffer[(y*bytesPerPixel)+1] =  rgbBuffer[y*bytesPerPixel+2] = val;
+        rgbBuffer[(y*bytesPerPixel)+3] = 0xff;
+    }
+    
+    [self.outScene.cameraTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
+        NSLog(@"made texture");
+        memcpy(pixelData, rgbBuffer, lengthInBytes);
+    }];
 }
 
 - (NSArray *) recordKeypoints:(cv::vector<cv::KeyPoint>) keyPoints
@@ -187,7 +215,6 @@ cv::Mat* YUV2RGB(cv::Mat *src){
     
     return [NSArray arrayWithArray:retval];
 }
-
 
 - (NSArray *)recordContours:(cv::vector< cv::vector <cv::Point> >) approxContours
 {
@@ -215,15 +242,12 @@ cv::Mat* YUV2RGB(cv::Mat *src){
     return YES;
 }
 
-
 - (void) mouseDown:(NSEvent *)theEvent
 {
     [super mouseDown:theEvent];
     
     NSLog(@"Mouse Down" );
 }
-
-
 
 - (void)setRepresentedObject:(id)representedObject {
     [super setRepresentedObject:representedObject];

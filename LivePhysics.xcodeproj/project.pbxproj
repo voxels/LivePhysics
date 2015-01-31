@@ -11,6 +11,8 @@
 		1E4A65141A78986B002B8A71 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E4A65131A78986B002B8A71 /* CoreMedia.framework */; };
 		1E4A65161A789873002B8A71 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E4A65151A789873002B8A71 /* CoreVideo.framework */; };
 		1E65662E1A7D4FAB00B0A091 /* Keypoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E65662D1A7D4FAB00B0A091 /* Keypoint.m */; };
+		1E6566381A7D5F4F00B0A091 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E6566371A7D5F4F00B0A091 /* SpriteKit.framework */; };
+		1E65663B1A7D5F7E00B0A091 /* OutScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E65663A1A7D5F7E00B0A091 /* OutScene.m */; };
 		1E76DEAC1A787AA40073075F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DEAB1A787AA40073075F /* AppDelegate.m */; };
 		1E76DEAE1A787AA40073075F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DEAD1A787AA40073075F /* main.m */; };
 		1E76DEB11A787AA40073075F /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DEB01A787AA40073075F /* ViewController.mm */; };
@@ -46,6 +48,9 @@
 		1E4A65151A789873002B8A71 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		1E65662C1A7D4FAB00B0A091 /* Keypoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keypoint.h; sourceTree = "<group>"; };
 		1E65662D1A7D4FAB00B0A091 /* Keypoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Keypoint.m; sourceTree = "<group>"; };
+		1E6566371A7D5F4F00B0A091 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
+		1E6566391A7D5F7E00B0A091 /* OutScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutScene.h; sourceTree = "<group>"; };
+		1E65663A1A7D5F7E00B0A091 /* OutScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OutScene.m; sourceTree = "<group>"; };
 		1E76DEA51A787AA40073075F /* LivePhysics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LivePhysics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E76DEA91A787AA40073075F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1E76DEAA1A787AA40073075F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -78,18 +83,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				1EDCE93B1A7CB9E70088BE13 /* libz.dylib in Frameworks */,
-				1E4A65161A789873002B8A71 /* CoreVideo.framework in Frameworks */,
 				1EDCE9411A7CC13C0088BE13 /* libopencv_highgui.a in Frameworks */,
 				1EDCE93F1A7CBABE0088BE13 /* libcudart_static.a in Frameworks */,
 				1EDCE92F1A7CB9380088BE13 /* libcuda.dylib in Frameworks */,
-				1EDCE92D1A7CB8FD0088BE13 /* CUDA.framework in Frameworks */,
 				1EDCE9391A7CB9C10088BE13 /* libopencv_imgproc.a in Frameworks */,
 				1EDCE9341A7CB97B0088BE13 /* libopencv_features2d.a in Frameworks */,
 				1EDCE9371A7CB9980088BE13 /* libopencv_flann.a in Frameworks */,
 				1EDCE8FB1A7CB27B0088BE13 /* libopencv_core.a in Frameworks */,
-				1E4A65141A78986B002B8A71 /* CoreMedia.framework in Frameworks */,
-				1E4A65121A789864002B8A71 /* AVFoundation.framework in Frameworks */,
 				1EDCE9351A7CB97B0088BE13 /* libopencv_objdetect.a in Frameworks */,
+				1EDCE92D1A7CB8FD0088BE13 /* CUDA.framework in Frameworks */,
+				1E4A65141A78986B002B8A71 /* CoreMedia.framework in Frameworks */,
+				1E4A65161A789873002B8A71 /* CoreVideo.framework in Frameworks */,
+				1E4A65121A789864002B8A71 /* AVFoundation.framework in Frameworks */,
+				1E6566381A7D5F4F00B0A091 /* SpriteKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,9 +109,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1E6566321A7D5A9E00B0A091 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1E65662C1A7D4FAB00B0A091 /* Keypoint.h */,
+				1E65662D1A7D4FAB00B0A091 /* Keypoint.m */,
+				1E76DEDA1A78803D0073075F /* OCVSimpleBlobs.h */,
+				1E76DED91A78803D0073075F /* OCVSimpleBlobs.cpp */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		1E6566331A7D5AB000B0A091 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1E76DEAF1A787AA40073075F /* ViewController.h */,
+				1E76DEB01A787AA40073075F /* ViewController.mm */,
+				1E6566391A7D5F7E00B0A091 /* OutScene.h */,
+				1E65663A1A7D5F7E00B0A091 /* OutScene.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
 		1E76DE9C1A787AA40073075F = {
 			isa = PBXGroup;
 			children = (
+				1E6566371A7D5F4F00B0A091 /* SpriteKit.framework */,
 				1E76DEA71A787AA40073075F /* LivePhysics */,
 				1E76DEBE1A787AA40073075F /* LivePhysicsTests */,
 				1E76DEA61A787AA40073075F /* Products */,
@@ -126,13 +155,8 @@
 			children = (
 				1E76DEAA1A787AA40073075F /* AppDelegate.h */,
 				1E76DEAB1A787AA40073075F /* AppDelegate.m */,
-				1E65662C1A7D4FAB00B0A091 /* Keypoint.h */,
-				1E65662D1A7D4FAB00B0A091 /* Keypoint.m */,
-				1E76DEAF1A787AA40073075F /* ViewController.h */,
-				1E76DEB01A787AA40073075F /* ViewController.mm */,
-				1E76DED91A78803D0073075F /* OCVSimpleBlobs.cpp */,
-				1EDCE9401A7CC13C0088BE13 /* libopencv_highgui.a */,
-				1E76DEDA1A78803D0073075F /* OCVSimpleBlobs.h */,
+				1E6566331A7D5AB000B0A091 /* View */,
+				1E6566321A7D5A9E00B0A091 /* Model */,
 				1E76DEB21A787AA40073075F /* Images.xcassets */,
 				1E76DEB41A787AA40073075F /* Main.storyboard */,
 				1E76DEA81A787AA40073075F /* Supporting Files */,
@@ -144,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				1EDCE93A1A7CB9E70088BE13 /* libz.dylib */,
+				1EDCE9401A7CC13C0088BE13 /* libopencv_highgui.a */,
 				1EDCE9381A7CB9C10088BE13 /* libopencv_imgproc.a */,
 				1EDCE9361A7CB9980088BE13 /* libopencv_flann.a */,
 				1EDCE9321A7CB97B0088BE13 /* libopencv_features2d.a */,
@@ -278,6 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E76DEB11A787AA40073075F /* ViewController.mm in Sources */,
+				1E65663B1A7D5F7E00B0A091 /* OutScene.m in Sources */,
 				1E76DEAE1A787AA40073075F /* main.m in Sources */,
 				1E76DEAC1A787AA40073075F /* AppDelegate.m in Sources */,
 				1E76DEDB1A78803D0073075F /* OCVSimpleBlobs.cpp in Sources */,
