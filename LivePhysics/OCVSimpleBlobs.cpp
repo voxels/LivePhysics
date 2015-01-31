@@ -59,8 +59,6 @@ void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv
     }
     
     *_approxContours = approxContours;
-    
-    cout << "Keypoints " << keyPoints.size() << " Countours " << approxContours.size() << endl;
-
+    moveWindow(wndNameOut, 100, 100);
     imshow( wndNameOut, out );
 }

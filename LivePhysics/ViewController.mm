@@ -153,8 +153,11 @@ cv::Mat* YUV2RGB(cv::Mat *src){
     
     detect(grayImage, &keyPoints, &approxContours);
     
-    NSArray *keypointsArray = [self convertKeypoints:keyPoints];
-    NSLog(@"Transferred KeyPoints: %lu", keypointsArray.count);
+    NSArray *keypointsArray = [self recordKeypoints:keyPoints];
+    NSArray *contoursArray = [self recordContours:approxContours];
+    
+    NSLog(@"Transferred KeyPoints: %lu, Contours:%lu", keypointsArray.count, contoursArray.count);
+
     CVPixelBufferUnlockBaseAddress( imageBuffer, 0 );
 //    CGContextRelease(context);
 }
@@ -164,7 +167,7 @@ cv::Mat* YUV2RGB(cv::Mat *src){
     NSLog(@"Did drop");
 }
 
-- (NSArray *) convertKeypoints:(cv::vector<cv::KeyPoint>) keyPoints
+- (NSArray *) recordKeypoints:(cv::vector<cv::KeyPoint>) keyPoints
 {
     NSMutableArray *retval = [NSMutableArray array];
     
@@ -186,6 +189,27 @@ cv::Mat* YUV2RGB(cv::Mat *src){
 }
 
 
+- (NSArray *)recordContours:(cv::vector< cv::vector <cv::Point> >) approxContours
+{
+    NSMutableArray *retval = [NSMutableArray array];
+    for ( cv::vector<cv::vector<cv::Point> >::iterator it1 = approxContours.begin(); it1 != approxContours.end(); ++it1 )
+    {
+        NSMutableArray *contourPoints = [NSMutableArray array];
+        
+        for ( std::vector<cv::Point>::iterator it2 = (*it1).begin(); it2 != (*it1).end(); ++ it2 )
+        {
+            NSPoint thisPoint = CGPointMake( it2->x, it2->y );
+            [contourPoints addObject:[NSValue valueWithPoint:thisPoint]];
+        }
+        NSDictionary *contourDict = @{@"points": contourPoints};
+        [retval addObject:contourDict];
+    }
+    
+    return [NSArray arrayWithArray:retval];
+}
+
+
+#pragma mark - View controller
 - (BOOL)acceptsFirstResponder
 {
     return YES;
