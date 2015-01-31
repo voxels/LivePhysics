@@ -10,7 +10,7 @@
 #import "OutScene.h"
 #import "OCVCaptureModel.h"
 
-@interface OutSceneViewController ()
+@interface OutSceneViewController () <OCVCaptureModelDelegate>
 
 @property (strong, nonatomic) OutScene *outScene;
 @property (strong, nonatomic) OCVCaptureModel *captureModel;
@@ -28,9 +28,8 @@
     [self setupCamTexture];
     
     self.captureModel = [OCVCaptureModel sharedModel];
+    self.captureModel.delegate = self;
 }
-
-
 
 - (void) setupCamTexture
 {
@@ -38,6 +37,19 @@
     self.outScene.cameraTexture = [[SKMutableTexture alloc] initWithSize:CGSizeMake(kDetectSessionWidth, kDetectSessionHeight) pixelFormat:kCVPixelFormatType_32RGBA];
 }
 
+
+#pragma mark - OCVCaptureDelegate
+
+- (void) captureModelDidFindKeypoints:(NSArray *)keypoints
+{
+    [self.outScene addKeyPoints:keypoints];
+    
+}
+
+- (void) captureModelDidFindContours:(NSArray *)contours
+{
+    [self.outScene addContours:contours];
+}
 
 
 @end
