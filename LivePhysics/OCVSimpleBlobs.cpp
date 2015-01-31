@@ -18,40 +18,46 @@ void detect( cv::Mat image )
     Mat src, gray, thresh, binary;
     Mat out;
     vector<KeyPoint> keyPoints;
-//    vector< vector <Point> > contours;
-//    vector< vector <Point> > approxContours;
+    vector< vector <Point> > contours;
+    std::vector<cv::Vec4i > hierarchy;
+    vector< vector <Point> > approxContours;
     
     SimpleBlobDetector::Params params;
-    params.minThreshold = 60;
-    params.maxThreshold = 80;
+    params.minThreshold = 0;
+    params.maxThreshold = 70;
     params.thresholdStep = 1;
     
-    params.minArea = 15.0;
-    params.minConvexity = 0.3;
-    params.minInertiaRatio = 0.05;
+    params.minArea = 10.0;
+    params.minConvexity = 0.9;
+    params.minInertiaRatio = 0.2;
+    params.maxInertiaRatio = 0.5;
     
-    params.maxArea = 50.0;
+    params.maxArea = 100.0;
     params.maxConvexity = 10;
-    
+    params.minDistBetweenBlobs = 30.0;
     params.filterByColor = false;
     params.filterByCircularity = false;
     
+    blur( image, image, Size(4, 4));
     namedWindow( wndNameOut, CV_GUI_NORMAL );
     
     SimpleBlobDetector blobDetector = SimpleBlobDetector(params);
     ;
-    
-        blobDetector.detect( image, keyPoints );
-        drawKeypoints( image, keyPoints, out, Scalar(0,255,0), DrawMatchesFlags::DEFAULT);
+    blobDetector.detect( image, keyPoints );
+    drawKeypoints( image, keyPoints, out, Scalar(0,255,0), DrawMatchesFlags::DEFAULT);
+    Canny( image, image, 0, 150, 3 );
 
-//        approxContours.resize( contours.size() );
-//        
-//        for( int i = 0; i < contours.size(); ++i )
-//        {
-//            approxPolyDP( Mat(contours[i]), approxContours[i], 4, 1 );
-//            drawContours( out, contours, i, Scalar(rand()&255, rand()&255, rand()&255) );
-//            drawContours( out, approxContours, i, Scalar(rand()&255, rand()&255, rand()&255) );
-//        }
-//        cout << "Keypoints " << keyPoints.size() << " Countours " << contours.size() << endl;
-        imshow( wndNameOut, out );
+    findContours(image, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE);
+
+    approxContours.resize( contours.size() );
+
+    for( int i = 0; i < contours.size(); ++i )
+    {
+        approxPolyDP( Mat(contours[i]), approxContours[i], 4, 1 );
+//        drawContours( out, contours, i, Scalar(rand()&255, rand()&255, rand()&255) );
+        drawContours( out, approxContours, i, Scalar(rand()&255, rand()&255, rand()&255) );
+    }
+    cout << "Keypoints " << keyPoints.size() << " Countours " << contours.size() << endl;
+
+    imshow( wndNameOut, out );
 }
