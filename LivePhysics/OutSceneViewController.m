@@ -41,13 +41,13 @@
 
 - (void) captureModelDidFindKeypoints:(NSArray *)keypoints
 {
-//    [self.outScene addKeyPoints:keypoints];
+    [self.outScene addKeyPoints:keypoints];
     
 }
 
 - (void) captureModelDidFindContours:(NSArray *)contours
 {
-//    [self.outScene addContours:contours];
+    [self.outScene addContours:contours];
 }
 
 @end

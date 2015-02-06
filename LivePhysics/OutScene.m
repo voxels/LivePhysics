@@ -99,7 +99,7 @@
     self.textureModel = [CaptureTextureModel sharedModel];
     self.cameraTextureSprite = [SKSpriteNode spriteNodeWithTexture:self.textureModel.cameraTexture size:CGSizeMake(1280, 720)];
 //    self.cameraTextureSprite.size = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
-    self.cameraTextureSprite.position = CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height / 2.f);
+//    self.cameraTextureSprite.position = CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height / 2.f);
     self.cameraTextureSprite.zPosition = 0;
     [self addChild:self.cameraTextureSprite];
     [self addChild:self.rootNode];
@@ -107,44 +107,45 @@
 
 - (void) addKeyPoints:(NSArray *) keypoints
 {
-    for( Keypoint *thisKeypoint in keypoints )
-    {
-//        Keypoint *thisKeypoint = [keypoints firstObject];
-        SKShapeNode *keypointNode = [SKShapeNode shapeNodeWithCircleOfRadius:2.0];
-        keypointNode.fillColor = [SKColor colorWithRed:255.f/255.f green:62.f/255.f blue:181.f/255.f alpha:0.5];
-        keypointNode.lineWidth = 0;
-        keypointNode.position = CGPointMake( self.view.bounds.size.width - thisKeypoint.pt.x * 800.f/640.f, self.view.bounds.size.height - thisKeypoint.pt.y * 600.f/480.f);
-        keypointNode.zPosition = 3;
-        [self.rootNode addChild:keypointNode];
-    }
+    NSLog(@"Keypoints: %lu", keypoints.count);
+//    for( Keypoint *thisKeypoint in keypoints )
+//    {
+////        Keypoint *thisKeypoint = [keypoints firstObject];
+//        SKShapeNode *keypointNode = [SKShapeNode shapeNodeWithCircleOfRadius:2.0];
+//        keypointNode.fillColor = [SKColor colorWithRed:255.f/255.f green:62.f/255.f blue:181.f/255.f alpha:0.5];
+//        keypointNode.lineWidth = 0;
+//        keypointNode.position = CGPointMake( self.view.bounds.size.width - thisKeypoint.pt.x * 800.f/640.f, self.view.bounds.size.height - thisKeypoint.pt.y * 600.f/480.f);
+//        keypointNode.zPosition = 3;
+//        [self.rootNode addChild:keypointNode];
+//    }
 }
 
 
 - (void) addContours:(NSArray *)contours
 {
-//    NSLog(@"Contours: %lu", contours.count);
-    for( NSDictionary *thisContour in contours )
-    {
-        NSArray *points = thisContour[@"points"];
-        NSValue *firstPointValue = [points firstObject];
-        NSPoint firstPoint = firstPointValue.pointValue;
-        CGPoint scalePoint =  CGPointMake(self.view.bounds.size.width - firstPoint.x * 800.f/640.f, self.view.bounds.size.height - firstPoint.y * 600.f/480.f);
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        [path moveToPoint:scalePoint];
-        for( int ii = 1; ii < points.count; ++ii )
-        {
-            NSValue *thisValue = [points objectAtIndex:ii];
-            CGPoint point = CGPointMake(self.view.bounds.size.width - thisValue.pointValue.x * 800.f/640.f, self.view.bounds.size.height -thisValue.pointValue.y * 600.f/480.f);
-            [path lineToPoint:point];
-        }
-        [path closePath];
-        
-        SKShapeNode *thisPath = [SKShapeNode shapeNodeWithPath:path.quartzPath];
-        thisPath.strokeColor = [SKColor colorWithRed:255.f/255.f green:170.f/255.f blue:77.f/255.f alpha:0.2];
-        thisPath.lineWidth = 1.f;
-        thisPath.zPosition = 5;
-        [self.rootNode addChild:thisPath];
-    }
+    NSLog(@"Contours: %lu", contours.count);
+//    for( NSDictionary *thisContour in contours )
+//    {
+//        NSArray *points = thisContour[@"points"];
+//        NSValue *firstPointValue = [points firstObject];
+//        NSPoint firstPoint = firstPointValue.pointValue;
+//        CGPoint scalePoint =  CGPointMake(self.view.bounds.size.width - firstPoint.x * 800.f/640.f, self.view.bounds.size.height - firstPoint.y * 600.f/480.f);
+//        NSBezierPath *path = [NSBezierPath bezierPath];
+//        [path moveToPoint:scalePoint];
+//        for( int ii = 1; ii < points.count; ++ii )
+//        {
+//            NSValue *thisValue = [points objectAtIndex:ii];
+//            CGPoint point = CGPointMake(self.view.bounds.size.width - thisValue.pointValue.x * 800.f/640.f, self.view.bounds.size.height -thisValue.pointValue.y * 600.f/480.f);
+//            [path lineToPoint:point];
+//        }
+//        [path closePath];
+//        
+//        SKShapeNode *thisPath = [SKShapeNode shapeNodeWithPath:path.quartzPath];
+//        thisPath.strokeColor = [SKColor colorWithRed:255.f/255.f green:170.f/255.f blue:77.f/255.f alpha:0.2];
+//        thisPath.lineWidth = 1.f;
+//        thisPath.zPosition = 5;
+//        [self.rootNode addChild:thisPath];
+//    }
 }
 
 

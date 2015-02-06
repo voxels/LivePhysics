@@ -15,11 +15,10 @@ void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv
 {
     const char *wndNameOut = "Out";
     
-    Mat src, gray, thresh, inverted;
+    Mat thresh;
     Mat out;
-    vector<KeyPoint> keyPoints;
     vector< vector <Point> > contours;
-    std::vector<cv::Vec4i > hierarchy;
+    std::vector<cv::Vec4i> hierarchy;
     vector< vector <Point> > approxContours;
     
     SimpleBlobDetector::Params params;
@@ -39,12 +38,12 @@ void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv
     params.filterByCircularity = false;
     
     blur( image, image, Size(4, 4));
-    namedWindow( wndNameOut, CV_GUI_NORMAL );
-    
+//    namedWindow( wndNameOut, CV_GUI_NORMAL );
+
     SimpleBlobDetector blobDetector = SimpleBlobDetector(params);
     ;
     blobDetector.detect( image, *_keyPoints );
-    drawKeypoints( image, *_keyPoints, out, Scalar(0,255,0), DrawMatchesFlags::DEFAULT);
+//    drawKeypoints( image, *_keyPoints, out, Scalar(0,255,0), DrawMatchesFlags::DEFAULT);
     Canny( image, thresh, 0, 150, 3 );
 
     findContours(thresh, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE);
@@ -53,12 +52,21 @@ void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv
 
     for( int i = 0; i < contours.size(); ++i )
     {
-//        approxPolyDP( Mat(contours[i]),  approxContours[i], 4, 1 );
-        drawContours( out, contours, i, Scalar(rand()&255, rand()&255, rand()&255) );
-//        drawContours( out, approxContours, i, Scalar(rand()&255, rand()&255, rand()&255) );
+        approxPolyDP( Mat(contours[i]),  approxContours[i], 4, 1 );
+////        drawContours( out, contours, i, Scalar(rand()&255, rand()&255, rand()&255) );
+////        drawContours( out, approxContours, i, Scalar(rand()&255, rand()&255, rand()&255) );
     }
     
-    *_approxContours = contours;
-    moveWindow(wndNameOut, 100, 100);
-    imshow( wndNameOut, out );
+    *_approxContours = approxContours;
+    
+    vector< vector <Point> >().swap(contours);
+    std::vector<cv::Vec4i>().swap(hierarchy);
+    vector< vector <Point> >().swap(approxContours);
+    thresh.release();
+    out.release();
+    
+//    *_approxContours = contours;
+    
+//    moveWindow(wndNameOut, 100, 100);
+//    imshow( wndNameOut, out );
 }

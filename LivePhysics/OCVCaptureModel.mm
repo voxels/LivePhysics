@@ -121,9 +121,8 @@ const CGFloat kDetectMinDist = 30.f;
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
     //convert from Core Media to Core Video
-    [self toCameraTexture:sampleBuffer];
-
-//    [self toSingleChannel:sampleBuffer];
+//    [self toCameraTexture:sampleBuffer];
+    [self toSingleChannel:sampleBuffer];
 }
 
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didDropSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
@@ -145,14 +144,14 @@ const CGFloat kDetectMinDist = 30.f;
     size_t bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 0);
     
     Pixel_8 *lumaBuffer = (Pixel_8*)CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
-    cv::vector<cv::KeyPoint> keyPoints;
+    cv::vector< cv::KeyPoint> keyPoints;
     cv::vector< cv::vector <cv::Point> >  approxContours;
-    
     //    CGColorSpaceRef grayColorSpace = CGColorSpaceCreateDeviceGray();
     //    CGContextRef context = CGBitmapContextCreate(lumaBuffer, width, height, 8, bytesPerRow, grayColorSpace, kCGImageAlphaNone);
     
     vImage_Buffer imagebuf = {lumaBuffer, height, width, bytesPerRow};
     cv::Mat grayImage((int)imagebuf.height, (int)imagebuf.width, CV_8U, imagebuf.data, imagebuf.rowBytes);
+    cv::resize(grayImage, grayImage, cv::Size(1280, 720));
     
     detect(grayImage, &keyPoints, &approxContours, kDetectMinThresh, kDetectMaxThresh, kDetectThreshStep, kDetectMinDist);
     
@@ -167,6 +166,11 @@ const CGFloat kDetectMinDist = 30.f;
     }
     
     CVPixelBufferUnlockBaseAddress( imageBuffer, 0 );
+    
+    cv::vector< cv::KeyPoint>().swap(keyPoints);
+    cv::vector< cv::vector <cv::Point> >().swap(approxContours);
+    grayImage.release();
+    
     //    CGContextRelease(context);
 }
 
