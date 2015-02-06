@@ -53,12 +53,12 @@ void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv
 
     for( int i = 0; i < contours.size(); ++i )
     {
-        approxPolyDP( Mat(contours[i]),  approxContours[i], 4, 1 );
-//        drawContours( out, contours, i, Scalar(rand()&255, rand()&255, rand()&255) );
-        drawContours( out, approxContours, i, Scalar(rand()&255, rand()&255, rand()&255) );
+//        approxPolyDP( Mat(contours[i]),  approxContours[i], 4, 1 );
+        drawContours( out, contours, i, Scalar(rand()&255, rand()&255, rand()&255) );
+//        drawContours( out, approxContours, i, Scalar(rand()&255, rand()&255, rand()&255) );
     }
     
-    *_approxContours = approxContours;
+    *_approxContours = contours;
     moveWindow(wndNameOut, 100, 100);
     imshow( wndNameOut, out );
 }

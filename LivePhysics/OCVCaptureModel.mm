@@ -15,8 +15,8 @@
 #import "OutScene.h"
 #import "CaptureTextureModel.h"
 
-const CGFloat kDetectSessionWidth = 800.f;
-const CGFloat kDetectSessionHeight = 600.f;
+const CGFloat kDetectSessionWidth = 1920.f;
+const CGFloat kDetectSessionHeight = 1080.f;
 
 const CGFloat kDetectMinThresh = 0.f;
 const CGFloat kDetectMaxThresh = 70.f;
@@ -55,7 +55,6 @@ const CGFloat kDetectMinDist = 30.f;
 
 - (void) setupCamTexture
 {
-    NSLog(@"Setup camera texture");
     CaptureTextureModel *captureModel = [CaptureTextureModel sharedModel];
     self.textureModel = captureModel;
     AVCaptureInput *input = [session.inputs objectAtIndex:0];
@@ -70,7 +69,7 @@ const CGFloat kDetectMinDist = 30.f;
 {
     NSError *error;
     session = [AVCaptureSession new];
-    [session setSessionPreset:AVCaptureSessionPreset640x480];
+//    [session setSessionPreset:AVCaptureSessionPresetHigh];
     
     for (AVCaptureDevice *device in [AVCaptureDevice devices]) {
         if ([device hasMediaType:AVMediaTypeVideo] || [device hasMediaType:AVMediaTypeMuxed]) {
@@ -78,7 +77,9 @@ const CGFloat kDetectMinDist = 30.f;
             if (error) {
                 NSLog(@"deviceInputWithDevice failed with error %@", [error localizedDescription]);
             }
-            if ([session canAddInput:input] && [device.localizedName isEqualToString:@"USB2.0 Camera"])
+            NSLog(@"%@", device.localizedName);
+
+            if ([session canAddInput:input] && [device.localizedName isEqualToString:@"USB_Camera"])
             {
                 NSLog(@"Session can add input");
                 NSLog(@"%@", device.uniqueID);
@@ -120,8 +121,9 @@ const CGFloat kDetectMinDist = 30.f;
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
     //convert from Core Media to Core Video
-    [self toSingleChannel:sampleBuffer];
     [self toCameraTexture:sampleBuffer];
+
+//    [self toSingleChannel:sampleBuffer];
 }
 
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didDropSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
@@ -139,6 +141,7 @@ const CGFloat kDetectMinDist = 30.f;
     
     size_t width = CVPixelBufferGetWidthOfPlane(imageBuffer, 0);
     size_t height = CVPixelBufferGetHeightOfPlane(imageBuffer, 0);
+    
     size_t bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 0);
     
     Pixel_8 *lumaBuffer = (Pixel_8*)CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
@@ -163,7 +166,7 @@ const CGFloat kDetectMinDist = 30.f;
         [self.delegate captureModelDidFindContours:[self recordContours:approxContours]];
     }
     
-    //    CVPixelBufferUnlockBaseAddress( imageBuffer, 0 );
+    CVPixelBufferUnlockBaseAddress( imageBuffer, 0 );
     //    CGContextRelease(context);
 }
 
@@ -171,7 +174,7 @@ const CGFloat kDetectMinDist = 30.f;
 - (void) toCameraTexture:(CMSampleBufferRef)sampleBuffer
 {
     CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-//    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
     
     unsigned long bufferHeight = CVPixelBufferGetHeight(pixelBuffer);
     unsigned long bufferWidth = CVPixelBufferGetWidth(pixelBuffer);
@@ -198,6 +201,7 @@ const CGFloat kDetectMinDist = 30.f;
     CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
     
     [self.textureModel.cameraTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
+        NSLog(@"did update texture");
         memcpy(pixelData, rgbBuffer, lengthInBytes);
     }];
     

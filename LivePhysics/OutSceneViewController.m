@@ -26,8 +26,8 @@
 
     if(!_outScene )
     {
-        self.outScene = [[OutScene alloc] initWithSize:CGSizeMake(800, 600)];
-        self.outScene.scaleMode = SKSceneScaleModeAspectFit;
+        self.outScene = [[OutScene alloc] initWithSize:CGSizeMake(1280, 720)];
+//        self.outScene.scaleMode = SKSceneScaleModeAspectFit;
     }
     
     self.outSceneView.ignoresSiblingOrder = YES;
@@ -41,13 +41,13 @@
 
 - (void) captureModelDidFindKeypoints:(NSArray *)keypoints
 {
-    [self.outScene addKeyPoints:keypoints];
+//    [self.outScene addKeyPoints:keypoints];
     
 }
 
 - (void) captureModelDidFindContours:(NSArray *)contours
 {
-    [self.outScene addContours:contours];
+//    [self.outScene addContours:contours];
 }
 
 @end

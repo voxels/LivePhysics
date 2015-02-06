@@ -97,8 +97,8 @@
 - (void) setupCameraTextureSprite
 {
     self.textureModel = [CaptureTextureModel sharedModel];
-    self.cameraTextureSprite = [SKSpriteNode spriteNodeWithTexture:self.textureModel.cameraTexture size:self.viewRef.bounds.size];
-    self.cameraTextureSprite.size = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
+    self.cameraTextureSprite = [SKSpriteNode spriteNodeWithTexture:self.textureModel.cameraTexture size:CGSizeMake(1280, 720)];
+//    self.cameraTextureSprite.size = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
     self.cameraTextureSprite.position = CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height / 2.f);
     self.cameraTextureSprite.zPosition = 0;
     [self addChild:self.cameraTextureSprite];
@@ -111,7 +111,7 @@
     {
 //        Keypoint *thisKeypoint = [keypoints firstObject];
         SKShapeNode *keypointNode = [SKShapeNode shapeNodeWithCircleOfRadius:2.0];
-        keypointNode.fillColor = [SKColor redColor];
+        keypointNode.fillColor = [SKColor colorWithRed:255.f/255.f green:62.f/255.f blue:181.f/255.f alpha:0.5];
         keypointNode.lineWidth = 0;
         keypointNode.position = CGPointMake( self.view.bounds.size.width - thisKeypoint.pt.x * 800.f/640.f, self.view.bounds.size.height - thisKeypoint.pt.y * 600.f/480.f);
         keypointNode.zPosition = 3;
@@ -140,8 +140,8 @@
         [path closePath];
         
         SKShapeNode *thisPath = [SKShapeNode shapeNodeWithPath:path.quartzPath];
-        thisPath.strokeColor = [NSColor colorWithWhite:1.0 alpha:0.3];
-        thisPath.lineWidth = 2.f;
+        thisPath.strokeColor = [SKColor colorWithRed:255.f/255.f green:170.f/255.f blue:77.f/255.f alpha:0.2];
+        thisPath.lineWidth = 1.f;
         thisPath.zPosition = 5;
         [self.rootNode addChild:thisPath];
     }
