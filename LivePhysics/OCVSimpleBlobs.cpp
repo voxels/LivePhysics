@@ -58,6 +58,7 @@ void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv
     }
     
     *_approxContours = approxContours;
+//        *_approxContours = contours;
     
     vector< vector <Point> >().swap(contours);
     std::vector<cv::Vec4i>().swap(hierarchy);
@@ -65,7 +66,6 @@ void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv
     thresh.release();
     out.release();
     
-//    *_approxContours = contours;
     
 //    moveWindow(wndNameOut, 100, 100);
 //    imshow( wndNameOut, out );
