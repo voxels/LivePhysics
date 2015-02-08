@@ -21,16 +21,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.captureModel = [OCVCaptureModel sharedModel];
     self.captureModel.delegate = self;
 
     if(!_outScene )
     {
-        self.outScene = [[OutScene alloc] initWithSize:CGSizeMake(1280, 720)];
+        self.outScene = [[OutScene alloc] initWithSize:CGSizeMake(1280, 800)];
 //        self.outScene.scaleMode = SKSceneScaleModeAspectFit;
     }
     
-    self.outSceneView.ignoresSiblingOrder = YES;
+//    self.outSceneView.ignoresSiblingOrder = YES;
     self.outSceneView.showsFPS = YES;
     self.outSceneView.showsNodeCount = YES;
     [self.outSceneView presentScene:self.outScene];

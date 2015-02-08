@@ -26,4 +26,5 @@
 
 #endif /* defined(__LivePhysics__OCVSimpleBlobs__) */
 
-void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv::vector <cv::Point> >  *_approxContours, float minThresh, float maxThresh, int threshStep, float minDistBetweenBlobs );
+void createBlobDetector(float minThresh, float maxThresh, int threshStep, float minDistBetweenBlobs);
+void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv::vector <cv::Point> >  *_approxContours );

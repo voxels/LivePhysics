@@ -23,9 +23,16 @@ const CGFloat kDetectMaxThresh = 70.f;
 const NSInteger kDetectThreshStep = 2;
 const CGFloat kDetectMinDist = 30.f;
 
+#define DEBUGIMAGE 1
+
 @interface OCVCaptureModel () <AVCaptureVideoDataOutputSampleBufferDelegate>
+{
+    cv::vector< cv::KeyPoint> keyPoints;
+    cv::vector< cv::vector <cv::Point> >  approxContours;
+}
 
 @property (strong) CaptureTextureModel *textureModel;
+@property (strong) NSOperationQueue *detectQueue;
 
 @end
 
@@ -45,23 +52,31 @@ const CGFloat kDetectMinDist = 30.f;
     self = [super init];
     if( self )
     {
-        [self setupAVSession];
-        [self setupCamTexture];
-        [session startRunning];
+        self.detectQueue = [[NSOperationQueue alloc] init];
+        self.detectQueue.name = @"com.noisederived.livephysics.detect";
+        [self setupCapture];
     }
 
     return self;
 }
 
+- (void) setupCapture
+{
+    createBlobDetector(kDetectMinThresh, kDetectMaxThresh, kDetectThreshStep, kDetectMinDist);
+    [self setupAVSession];
+    [self setupCamTexture];
+    [session startRunning];
+}
+
 - (void) setupCamTexture
 {
-    CaptureTextureModel *captureModel = [CaptureTextureModel sharedModel];
-    self.textureModel = captureModel;
     AVCaptureInput *input = [session.inputs objectAtIndex:0];
     AVCaptureInputPort *port = [input.ports objectAtIndex:0];
     CMFormatDescriptionRef formatDescription = port.formatDescription;
     CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(formatDescription);
     NSLog(@"%i\t%i", dimensions.width, dimensions.height);
+    CaptureTextureModel *captureModel = [CaptureTextureModel sharedModel];
+    self.textureModel = captureModel;
     self.textureModel.cameraTexture = [[SKMutableTexture alloc] initWithSize:CGSizeMake(dimensions.width, dimensions.height) pixelFormat:kCVPixelFormatType_32RGBA];
 }
 
@@ -121,7 +136,11 @@ const CGFloat kDetectMinDist = 30.f;
 - (void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
     //convert from Core Media to Core Video
-//    [self toCameraTexture:sampleBuffer];
+    if( DEBUGIMAGE )
+    {
+        [self toCameraTexture:sampleBuffer];
+    }
+    
     [self toSingleChannel:sampleBuffer];
 }
 
@@ -144,33 +163,63 @@ const CGFloat kDetectMinDist = 30.f;
     size_t bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 0);
     
     Pixel_8 *lumaBuffer = (Pixel_8*)CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
-    cv::vector< cv::KeyPoint> keyPoints;
-    cv::vector< cv::vector <cv::Point> >  approxContours;
     //    CGColorSpaceRef grayColorSpace = CGColorSpaceCreateDeviceGray();
     //    CGContextRef context = CGBitmapContextCreate(lumaBuffer, width, height, 8, bytesPerRow, grayColorSpace, kCGImageAlphaNone);
     
     vImage_Buffer imagebuf = {lumaBuffer, height, width, bytesPerRow};
     cv::Mat grayImage((int)imagebuf.height, (int)imagebuf.width, CV_8U, imagebuf.data, imagebuf.rowBytes);
-    cv::resize(grayImage, grayImage, cv::Size(1280, 720));
+    cv::Mat croppedRef(grayImage, cv::Rect(1920.f/2.f - 1280.f/2.f, 1080.f/2.f - 800.f/2.f, 1280.f, 800.f ));
+    cv::resize(grayImage, grayImage, cv::Size(640, 400));
     
-    detect(grayImage, &keyPoints, &approxContours, kDetectMinThresh, kDetectMaxThresh, kDetectThreshStep, kDetectMinDist);
+    detect(grayImage, &keyPoints, &approxContours );
     
-    if( [self.delegate respondsToSelector:@selector(captureModelDidFindKeypoints:)] )
+    cv::vector<cv::KeyPoint>::iterator it;
+    
+    NSMutableArray *keypointsArray = [[NSMutableArray alloc] init];
+    for( it= keyPoints.begin(); it!= keyPoints.end();it++)
     {
-        [self.delegate captureModelDidFindKeypoints:[self recordKeypoints:keyPoints]];
+        Keypoint *thisKeypoint = [[Keypoint alloc] init];
+        thisKeypoint.angle = it->angle;
+        thisKeypoint.class_id = it->class_id;
+        thisKeypoint.octave = it->octave;
+        thisKeypoint.pt = CGPointMake(it->pt.x, it->pt.y);
+        thisKeypoint.response = it->response;
+        thisKeypoint.size = it->size;
+        [keypointsArray addObject:thisKeypoint];
+    }
+
+    NSMutableArray *contoursArray = [NSMutableArray array];
+    for ( cv::vector<cv::vector<cv::Point> >::iterator it1 = approxContours.begin(); it1 != approxContours.end(); ++it1 )
+    {
+        NSMutableArray *contourPoints = [NSMutableArray array];
+        
+        for ( std::vector<cv::Point>::iterator it2 = (*it1).begin(); it2 != (*it1).end(); ++ it2 )
+        {
+            NSPoint thisPoint = CGPointMake( it2->x, it2->y );
+            [contourPoints addObject:[NSValue valueWithPoint:thisPoint]];
+        }
+        NSDictionary *contourDict = @{@"points": contourPoints};
+        [contoursArray addObject:contourDict];
     }
     
-    if( [self.delegate respondsToSelector:@selector(captureModelDidFindContours:)] )
-    {
-        [self.delegate captureModelDidFindContours:[self recordContours:approxContours]];
-    }
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        if( [self.delegate respondsToSelector:@selector(captureModelDidFindKeypoints:)] )
+        {
+            [self.delegate captureModelDidFindKeypoints:keypointsArray];
+        }
+        
+        if( [self.delegate respondsToSelector:@selector(captureModelDidFindContours:)] )
+        {
+            [self.delegate captureModelDidFindContours:contoursArray];
+        }
+    }];
     
     CVPixelBufferUnlockBaseAddress( imageBuffer, 0 );
     
     cv::vector< cv::KeyPoint>().swap(keyPoints);
     cv::vector< cv::vector <cv::Point> >().swap(approxContours);
     grayImage.release();
-    
+    croppedRef.release();
     //    CGContextRelease(context);
 }
 
@@ -205,53 +254,11 @@ const CGFloat kDetectMinDist = 30.f;
     CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
     
     [self.textureModel.cameraTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
-        NSLog(@"did update texture");
         memcpy(pixelData, rgbBuffer, lengthInBytes);
     }];
     
     free(rgbBuffer);
 }
-
-- (NSArray *) recordKeypoints:(cv::vector<cv::KeyPoint>) keyPoints
-{
-    NSMutableArray *retval = [NSMutableArray array];
-    
-    cv::vector<cv::KeyPoint>::iterator it;
-    
-    for( it= keyPoints.begin(); it!= keyPoints.end();it++)
-    {
-        Keypoint *thisKeypoint = [[Keypoint alloc] init];
-        thisKeypoint.angle = it->angle;
-        thisKeypoint.class_id = it->class_id;
-        thisKeypoint.octave = it->octave;
-        thisKeypoint.pt = CGPointMake(it->pt.x, it->pt.y);
-        thisKeypoint.response = it->response;
-        thisKeypoint.size = it->size;
-        [retval addObject:thisKeypoint];
-    }
-    
-    return [NSArray arrayWithArray:retval];
-}
-
-- (NSArray *)recordContours:(cv::vector< cv::vector <cv::Point> >) approxContours
-{
-    NSMutableArray *retval = [NSMutableArray array];
-    for ( cv::vector<cv::vector<cv::Point> >::iterator it1 = approxContours.begin(); it1 != approxContours.end(); ++it1 )
-    {
-        NSMutableArray *contourPoints = [NSMutableArray array];
-        
-        for ( std::vector<cv::Point>::iterator it2 = (*it1).begin(); it2 != (*it1).end(); ++ it2 )
-        {
-            NSPoint thisPoint = CGPointMake( it2->x, it2->y );
-            [contourPoints addObject:[NSValue valueWithPoint:thisPoint]];
-        }
-        NSDictionary *contourDict = @{@"points": contourPoints};
-        [retval addObject:contourDict];
-    }
-    
-    return [NSArray arrayWithArray:retval];
-}
-
 
 
 @end
