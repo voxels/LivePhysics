@@ -44,14 +44,14 @@ void detect( cv::Mat image, cv::vector<cv::KeyPoint> *_keyPoints, cv::vector< cv
     
     blur( image, image, Size(4, 4));
     blobDetector.detect( image, *_keyPoints );
-    Canny( image, thresh, 0, 150, 3 );
-    findContours(thresh, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_TC89_L1);
+    Canny( image, thresh, 100, 150, 3 );
+    findContours(thresh, contours, hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
 
     approxContours.resize(contours.size());
 
     for( int i = 0; i < contours.size(); ++i )
     {
-        approxPolyDP( Mat(contours[i]),  approxContours[i], 4, 1 );
+        approxPolyDP( Mat(contours[i]),  approxContours[i], 2, 0 );
     }
     
     *_approxContours = approxContours;
