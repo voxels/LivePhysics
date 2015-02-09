@@ -19,9 +19,9 @@ const CGFloat kDetectSessionWidth = 1920.f;
 const CGFloat kDetectSessionHeight = 1080.f;
 
 const CGFloat kDetectMinThresh = 0.f;
-const CGFloat kDetectMaxThresh = 70.f;
-const NSInteger kDetectThreshStep = 2;
-const CGFloat kDetectMinDist = 30.f;
+const CGFloat kDetectMaxThresh = 50.f;
+const NSInteger kDetectThreshStep = 1;
+const CGFloat kDetectMinDist = 70.f;
 
 #define DEBUGIMAGE 1
 

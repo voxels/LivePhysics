@@ -11,9 +11,10 @@
 #import "CaptureTextureModel.h"
 #import "Keypoint.h"
 
-const NSInteger kOutSceneMaxCountours = 150;
-const NSInteger kOutSceneMaxCorners = 100;
-const NSInteger kOutSceneMaxKeypoints = 300;
+const NSInteger kOutSceneMaxCountours = 40;
+const NSInteger kOutSceneMaxCorners = 250;
+const NSInteger kOutSceneMaxKeypoints = 100;
+const NSInteger kOutSceneMaxFields = 15;
 
 #define ADDPOINTS 1
 #define ADDCONTOURS 1
@@ -25,12 +26,13 @@ const NSInteger kOutSceneMaxKeypoints = 300;
 @property (strong) SKEffectNode *contoursNode;
 @property (strong) SKEffectNode *cornersNode;
 @property (strong) SKEffectNode *keypointsNode;
-@property (strong) SKShapeNode *warpNode;
+@property (strong) SKEffectNode *warpNode;
 @property (strong) SKView *viewRef;
 @property (strong) SKSpriteNode *cameraTextureSprite;
 @property (strong) SKTexture *saveTexture;
 @property (strong) SKSpriteNode *renderedNode;
 @property (strong) SKEmitterNode *particleEmitterNode;
+@property (strong) SKEmitterNode *trailsEmitterNode;
 
 @end
 
@@ -97,6 +99,7 @@ const NSInteger kOutSceneMaxKeypoints = 300;
     self.viewRef = view;
     [self setupRootNode];
     [self setupEmitterNode];
+    [self setupTrailsNode];
     [self setupCameraTextureSprite];
     [self addChild:self.rootNode];
 }
@@ -108,6 +111,7 @@ const NSInteger kOutSceneMaxKeypoints = 300;
     
     self.contoursNode = [[SKEffectNode alloc] init];
     self.contoursNode.zPosition = 1.f;
+    self.contoursNode.blendMode = SKBlendModeAdd;
 
     self.cornersNode = [[SKEffectNode alloc] init];
     self.cornersNode.zPosition = 2.f;
@@ -115,16 +119,14 @@ const NSInteger kOutSceneMaxKeypoints = 300;
     self.keypointsNode = [[SKEffectNode alloc] init];
     self.keypointsNode.zPosition = 1.f;
 
-    self.warpNode = [[SKShapeNode alloc] init];
-//    self.warpNode.path = [self pathForWarp];
-    self.warpNode.fillColor = [SKColor redColor];
+    self.warpNode = [[SKEffectNode alloc] init];
     self.warpNode.zPosition = 6;
-    self.warpNode.fillTexture = [SKTexture textureWithImageNamed:@"screenshot"];
+    self.warpNode.blendMode = SKBlendModeMultiply;
     
     [self.rootNode addChild:self.contoursNode];
-    [self.rootNode addChild:self.cornersNode];
-    [self.rootNode addChild:self.keypointsNode];
     [self.rootNode addChild:self.warpNode];
+    [self.rootNode addChild:self.keypointsNode];
+    [self.rootNode addChild:self.cornersNode];
 }
 
 - (CGMutablePathRef) pathForWarp
@@ -144,6 +146,13 @@ const NSInteger kOutSceneMaxKeypoints = 300;
     NSString *magicPath = [[NSBundle mainBundle] pathForResource:@"MagicParticle" ofType:@"sks"];
     self.particleEmitterNode = [NSKeyedUnarchiver unarchiveObjectWithFile:magicPath];
 }
+
+- (void) setupTrailsNode
+{
+    NSString *magicPath = [[NSBundle mainBundle] pathForResource:@"BokehParticle" ofType:@"sks"];
+    self.trailsEmitterNode = [NSKeyedUnarchiver unarchiveObjectWithFile:magicPath];
+}
+
 
 - (void) setupCameraTextureSprite
 {
@@ -165,21 +174,12 @@ const NSInteger kOutSceneMaxKeypoints = 300;
             for( int ii = 0; ii < availableCount; ++ii )
             {
                 int randomPointIndex = arc4random_uniform((int)keypoints.count);
-                Keypoint *thisKeypoint = [keypoints objectAtIndex:randomPointIndex];
-                SKSpriteNode *keypointNode = [SKSpriteNode spriteNodeWithImageNamed:@"spark"];
-                keypointNode.position = CGPointMake( self.view.bounds.size.width - thisKeypoint.pt.x, self.view.bounds.size.height - thisKeypoint.pt.y);
-                keypointNode.zPosition = 3;
-                keypointNode.size = CGSizeMake(10.f, 10.f);
-                SKPhysicsBody *body = [SKPhysicsBody bodyWithCircleOfRadius:5];
-                keypointNode.physicsBody = body;
-                
-                double val = ((double)arc4random_uniform(2000)/1000);
-                SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
-                SKAction *dieAction = [SKAction removeFromParent];
-                SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
-
-                [self.keypointsNode addChild:keypointNode];
-                [keypointNode runAction:group];
+                if( randomPointIndex < keypoints.count && keypoints.count > 0 )
+                {
+                    Keypoint *thisKeypoint = [keypoints objectAtIndex:randomPointIndex];
+                    SKEmitterNode *shapeNode = [self markerSpriteWithKeypoint:thisKeypoint];
+                    [self.keypointsNode addChild:shapeNode];
+                }
             }
         }
     }
@@ -191,7 +191,7 @@ const NSInteger kOutSceneMaxKeypoints = 300;
 //    [self.contoursNode removeAllChildren];
     if( ADDCONTOURS )
     {
-//        [self addContourLines:contours];
+        [self addContourLines:contours];
         [self addCornerPoints:contours];
     }
 }
@@ -219,21 +219,26 @@ const NSInteger kOutSceneMaxKeypoints = 300;
             for( int ii = 1; ii < points.count; ++ii )
             {
                 NSValue *thisValue = [points objectAtIndex:ii];
-                CGPoint point = CGPointMake((self.view.bounds.size.width - thisValue.pointValue.x)*2.f - 1280.f, (self.view.bounds.size.height - thisValue.pointValue.y)*2.f - 800.f);
+                float rX = (float)arc4random_uniform(10) - 5.f;
+                float rY = (float)arc4random_uniform(10) - 5.f;
+                CGPoint point = CGPointMake((self.view.bounds.size.width - thisValue.pointValue.x)*2.f - 1280.f + rX, (self.view.bounds.size.height - thisValue.pointValue.y)*2.f - 800.f + rY);
                 [path lineToPoint:point];
             }
             
             [path closePath];
             
             SKShapeNode *thisPath = [SKShapeNode shapeNodeWithPath:path.quartzPath];
+
 //            SKPhysicsBody *body = [SKPhysicsBody bodyWithEdgeChainFromPath:path.quartzPath];
 //            thisPath.physicsBody = body;
-            
-            thisPath.strokeColor = [SKColor colorWithRed:255.f/255.f green:255.f/255.f blue:255.f/255.f alpha:0.7];
-            thisPath.lineWidth = 5.f;
+            thisPath.strokeColor = [SKColor colorWithWhite:1.f alpha:0.9f];
+            thisPath.lineWidth = 1.f;
+            thisPath.glowWidth = 2.f;
             thisPath.zPosition = 5;
+            thisPath.lineCap = kCGLineCapRound;
+            thisPath.lineJoin = kCGLineJoinRound;
             
-            double val = ((double)arc4random_uniform(3000)/1000);
+            double val = ((double)arc4random_uniform(2000)/1000);
             SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
             SKAction *dieAction = [SKAction removeFromParent];
             SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
@@ -254,34 +259,151 @@ const NSInteger kOutSceneMaxKeypoints = 300;
         for( int ii = 0; ii < availableCount; ++ii )
         {
             int randomPointIndex = arc4random_uniform((int)contours.count);
-
-            NSDictionary *thisContour = [contours objectAtIndex:randomPointIndex];
-            NSArray *points = thisContour[@"points"];
-            
-            for( int jj = 0; jj < points.count; ++jj )
+            if( randomPointIndex < contours.count && contours.count != 0 )
             {
-                NSValue *thisValue = [points objectAtIndex:jj];
-                CGPoint point = CGPointMake((self.view.bounds.size.width - thisValue.pointValue.x)*2.f - 1280.f, (self.view.bounds.size.height - thisValue.pointValue.y)*2.f - 800.f);
-                SKShapeNode *thisPath = [SKShapeNode shapeNodeWithCircleOfRadius:2.0];
-                SKPhysicsBody *body = [SKPhysicsBody bodyWithRectangleOfSize:CGSizeMake(1, 1)];
-                body.dynamic = NO;
-                thisPath.physicsBody = body;
+                NSDictionary *thisContour = [contours objectAtIndex:randomPointIndex];
+                NSArray *points = thisContour[@"points"];
                 
-                thisPath.strokeColor = [SKColor colorWithRed:255.f/255.f green:0.f/255.f blue:0.f/255.f alpha:0.7];
-                thisPath.lineWidth = 5.f;
-                thisPath.zPosition = 5;
-                thisPath.position = point;
+                if( kOutSceneMaxFields - (int)self.warpNode.children.count > 0 )
+                {
+                    NSValue *firstValue = [points firstObject];
+                    SKFieldNode *fieldNode = [self noiseNodeWithValue:firstValue];
+                    [self.warpNode addChild:fieldNode];
+                }
                 
-                double val = ((double)arc4random_uniform(2000)/1000);
-                SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
-                SKAction *dieAction = [SKAction removeFromParent];
-                SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
+                for( int jj = 1; jj < points.count-1; ++jj )
+                {
+                    NSValue *thisValue = [points objectAtIndex:jj];
+                    CGPoint point = CGPointMake((self.view.bounds.size.width - thisValue.pointValue.x)*2.f - 1280.f, (self.view.bounds.size.height - thisValue.pointValue.y)*2.f - 800.f);
+                    
+                    SKSpriteNode *spriteNode = [self physicsSpriteWithPostion:point];
+//                    SKEmitterNode *emitterNode = [self trailsNodeWithPosition:point];
+                    [self.cornersNode addChild:spriteNode];
+                }
                 
-                [self.cornersNode addChild:thisPath];
-                [thisPath runAction:group];
+                if( kOutSceneMaxFields - (int)self.warpNode.children.count > 0 )
+                {
+                    NSValue *firstValue = [points lastObject];
+                    SKFieldNode *fieldNode = [self turbulenceNodeWithValue:firstValue];
+                    [self.warpNode addChild:fieldNode];
+                }
             }
         }
     }
+}
+
+
+
+- (SKSpriteNode *) physicsSpriteWithPostion:(CGPoint)point
+{
+    SKSpriteNode *spriteNode = [SKSpriteNode spriteNodeWithImageNamed:@"bokeh"];
+    
+    spriteNode.position = CGPointMake(point.x + arc4random_uniform(10) - 5, point.y + arc4random_uniform(10) - 5);
+    spriteNode.zPosition = 3;
+    spriteNode.size = CGSizeMake(4.f, 4.f);
+    spriteNode.color = [SKColor colorWithRed:97.0/255.0 green:0.f blue:159.f/255.f alpha:1.f];
+    spriteNode.colorBlendFactor = 0.6;
+    spriteNode.blendMode = SKBlendModeAdd;
+    
+    SKPhysicsBody *body = [SKPhysicsBody bodyWithCircleOfRadius:1];
+    spriteNode.physicsBody = body;
+    
+    double val = ((double)arc4random_uniform(2000)/1000);
+    double rot = arc4random_uniform(5);
+    SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
+    SKAction *growAction = [SKAction scaleBy:4.0 duration:val];
+    SKAction *rotateAction = [SKAction rotateByAngle:M_PI * rot duration:val];
+    SKAction *buildAction = [SKAction group:@[fadeAction, growAction, rotateAction]];
+    SKAction *dieAction = [SKAction removeFromParent];
+    SKAction *group = [SKAction sequence:@[buildAction, dieAction]];
+    [spriteNode runAction:group];
+    return spriteNode;
+}
+
+
+- (SKEmitterNode *)trailsNodeWithPosition:(CGPoint)point
+{
+    SKEmitterNode *node = [self.trailsEmitterNode copy];
+    node.position = CGPointMake(point.x + arc4random_uniform(10) - 5, point.y + arc4random_uniform(10) - 5);
+    node.zPosition = 3;
+
+    SKPhysicsBody *body = [SKPhysicsBody bodyWithCircleOfRadius:3];
+    node.physicsBody = body;
+
+    double val = ((double)arc4random_uniform(6000)/1000);
+    SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
+    SKAction *dieAction = [SKAction removeFromParent];
+    SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
+    [node runAction:group];
+    return node;
+}
+
+
+- (SKEmitterNode *)markerSpriteWithKeypoint:(Keypoint *)keypoint
+{
+//    SKShapeNode *node = [SKShapeNode shapeNodeWithCircleOfRadius:keypoint.size];
+    SKEmitterNode *node = [self.particleEmitterNode copy];
+    CGPoint point = CGPointMake((self.view.bounds.size.width - keypoint.pt.x)*2.f - 1280.f, (self.view.bounds.size.height - keypoint.pt.y)*2.f - 800.f);
+
+    node.position = point;
+    double val = ((double)arc4random_uniform(6000)/1000);
+    SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
+    SKAction *dieAction = [SKAction removeFromParent];
+    SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
+    [node runAction:group];
+    return node;
+}
+
+
+
+- (SKFieldNode *) fieldNodeWithKeypoint:(Keypoint *)keypoint
+{
+    SKFieldNode *node = [SKFieldNode radialGravityField];
+    node.region = [[SKRegion alloc] initWithRadius:50.f];
+    CGPoint point = CGPointMake((self.view.bounds.size.width - keypoint.pt.x)*2.f - 1280.f, (self.view.bounds.size.height - keypoint.pt.y)*2.f - 800.f);
+    node.position = point;
+    
+    double val = ((double)arc4random_uniform(2000)/1000);
+    SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
+    SKAction *dieAction = [SKAction removeFromParent];
+    SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
+    [node runAction:group];
+
+    return node;
+}
+
+- (SKFieldNode *)noiseNodeWithValue:(NSValue *)thisValue
+{
+    SKFieldNode *node = [SKFieldNode noiseFieldWithSmoothness:1.0 animationSpeed:1.0];
+    node.region = [[SKRegion alloc] initWithRadius:20.f];
+    CGPoint point = CGPointMake((self.view.bounds.size.width - thisValue.pointValue.x)*2.f - 1280.f, (self.view.bounds.size.height - thisValue.pointValue.y)*2.f - 800.f);
+    node.position = point;
+    node.strength = 0.05;
+    
+    double val = ((double)arc4random_uniform(1000)/1000);
+    SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
+    SKAction *dieAction = [SKAction removeFromParent];
+    SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
+    [node runAction:group];
+    
+    return node;
+}
+
+- (SKFieldNode *)turbulenceNodeWithValue:(NSValue *)thisValue
+{
+    SKFieldNode *node = [SKFieldNode turbulenceFieldWithSmoothness:0.5 animationSpeed:2.0];
+//    SKFieldNode *node = [SKFieldNode dragField];
+    node.region = [[SKRegion alloc] initWithRadius:200.f];
+    CGPoint point = CGPointMake((self.view.bounds.size.width - thisValue.pointValue.x)*2.f - 1280.f, (self.view.bounds.size.height - thisValue.pointValue.y)*2.f - 800.f);
+    node.position = point;
+    
+    double val = ((double)arc4random_uniform(8000)/1000);
+    SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
+    SKAction *dieAction = [SKAction removeFromParent];
+    SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
+    [node runAction:group];
+    
+    return node;
 }
 
 

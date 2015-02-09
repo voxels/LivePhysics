@@ -28,6 +28,7 @@
     if(!_outScene )
     {
         self.outScene = [[OutScene alloc] initWithSize:CGSizeMake(1280, 800)];
+        self.outScene.physicsWorld.gravity = CGVectorMake(0.f, 0.1f);
 //        self.outScene.scaleMode = SKSceneScaleModeAspectFit;
     }
     
@@ -42,6 +43,7 @@
 
 - (void) captureModelDidFindKeypoints:(NSArray *)keypoints
 {
+//    self.outScene.physicsWorld.gravity;
     [self.outScene addKeyPoints:keypoints];
     
 }

@@ -25,7 +25,7 @@ void createBlobDetector(float minThresh, float maxThresh, int threshStep, float 
     params.minInertiaRatio = 0.2;
     params.maxInertiaRatio = 0.5;
     
-    params.maxArea = 100.0;
+    params.maxArea = 50.0;
     params.maxConvexity = 10;
     params.minDistBetweenBlobs = minDistBetweenBlobs;
     params.filterByColor = false;

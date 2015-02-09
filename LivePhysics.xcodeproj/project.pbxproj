@@ -35,6 +35,9 @@
 		1EDCE93B1A7CB9E70088BE13 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE93A1A7CB9E70088BE13 /* libz.dylib */; };
 		1EDCE93F1A7CBABE0088BE13 /* libcudart_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE93E1A7CBABE0088BE13 /* libcudart_static.a */; };
 		1EDCE9411A7CC13C0088BE13 /* libopencv_highgui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE9401A7CC13C0088BE13 /* libopencv_highgui.a */; };
+		1EEC89241A88338E00310525 /* SmokeParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 1EEC89231A88338E00310525 /* SmokeParticle.sks */; };
+		1EEC89291A88352B00310525 /* BokehParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 1EEC89271A88352B00310525 /* BokehParticle.sks */; };
+		1EEC892A1A88352B00310525 /* bokeh.png in Resources */ = {isa = PBXBuildFile; fileRef = 1EEC89281A88352B00310525 /* bokeh.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,6 +91,9 @@
 		1EDCE93A1A7CB9E70088BE13 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1EDCE93E1A7CBABE0088BE13 /* libcudart_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcudart_static.a; path = "/Developer/NVIDIA/CUDA-6.5/lib/libcudart_static.a"; sourceTree = "<absolute>"; };
 		1EDCE9401A7CC13C0088BE13 /* libopencv_highgui.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_highgui.a; path = "../../../opencv-2.4.10/StaticLibs/lib/libopencv_highgui.a"; sourceTree = "<group>"; };
+		1EEC89231A88338E00310525 /* SmokeParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SmokeParticle.sks; sourceTree = "<group>"; };
+		1EEC89271A88352B00310525 /* BokehParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BokehParticle.sks; sourceTree = "<group>"; };
+		1EEC89281A88352B00310525 /* bokeh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bokeh.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +152,8 @@
 				1E65663D1A7D672C00B0A091 /* OutSceneViewController.m */,
 				1E6566391A7D5F7E00B0A091 /* OutScene.h */,
 				1E65663A1A7D5F7E00B0A091 /* OutScene.m */,
+				1EEC89271A88352B00310525 /* BokehParticle.sks */,
+				1EEC89231A88338E00310525 /* SmokeParticle.sks */,
 				1E76A5591A845E560026F7CD /* MagicParticle.sks */,
 			);
 			name = View;
@@ -178,6 +186,7 @@
 				1E6566331A7D5AB000B0A091 /* View */,
 				1E6566321A7D5A9E00B0A091 /* Model */,
 				1E76DEB21A787AA40073075F /* Images.xcassets */,
+				1EEC89281A88352B00310525 /* bokeh.png */,
 				1E76A55B1A8461650026F7CD /* spark.png */,
 				1E76DEA81A787AA40073075F /* Supporting Files */,
 			);
@@ -305,9 +314,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E76DEB31A787AA40073075F /* Images.xcassets in Resources */,
+				1EEC89291A88352B00310525 /* BokehParticle.sks in Resources */,
 				1E76A55C1A8461650026F7CD /* spark.png in Resources */,
 				1E76A55A1A845E560026F7CD /* MagicParticle.sks in Resources */,
+				1EEC892A1A88352B00310525 /* bokeh.png in Resources */,
 				1E76DEB61A787AA40073075F /* Main.storyboard in Resources */,
+				1EEC89241A88338E00310525 /* SmokeParticle.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
