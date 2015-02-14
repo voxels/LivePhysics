@@ -10,8 +10,10 @@
 
 @interface DeadEffectNode : SKEffectNode
 
+@property CIFilter *xFormFilter;
+
 - (id) initWithView:(SKView *)skView;
 
-- (void) updateSpriteTexture:(SKTexture *)updatedTexture forRect:(CGRect)calculatedRect;
+- (void) updateSpriteTexture:(SKTexture *)updatedTexture;
 
 @end

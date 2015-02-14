@@ -24,6 +24,7 @@
     if( self )
     {
         [self setupSpriteWithView:skView];
+        [self setupFilter];
     }
     return self;
 }
@@ -48,15 +49,60 @@
     [self addChild:self.spriteNode];
 }
 
+- (void) setupFilter
+{
+    self.xFormFilter = [self transformFilterWithDict:self.perspectiveDictionary];
+    self.filter = self.xFormFilter;
+}
 
-- (void) updateSpriteTexture:(SKTexture *)updatedTexture forRect:(CGRect)calculatedRect
+
+- (void) updateSpriteTexture:(SKTexture *)updatedTexture
 {
     self.spriteNode.texture = updatedTexture;
-    CGFloat scaleX = (CGRectGetMaxX(calculatedRect) - CGRectGetMinX(calculatedRect)) / self.viewSize.width;
-    CGFloat scaleY = (CGRectGetMaxY(calculatedRect) - CGRectGetMinY(calculatedRect)) / self.viewSize.height;
-    [self setXScale:scaleX];
-    [self setYScale:scaleY];
-    [self setPosition:CGPointMake(calculatedRect.origin.x, calculatedRect.origin.y)];
+}
+
+
+- (CIFilter *) positionFilterWithTranslation:(CGRect)calculatedRect
+{
+    NSAffineTransform *affineTransform = [NSAffineTransform transform];
+    CGFloat scaleX = (CGRectGetMaxX(calculatedRect) - CGRectGetMinX(calculatedRect) ) / self.viewSize.width;
+    CGFloat scaleY = (CGRectGetMaxY(calculatedRect) - CGRectGetMinY(calculatedRect) ) / self.viewSize.height;
+    [affineTransform scaleXBy:scaleX * 10 yBy:scaleY * 10];
+    //    [affineTransform translateXBy:-calculatedRect.origin.x yBy:-calculatedRect.origin.y ];
+    
+    //    NSLog(@"%f\t%f", calculatedRect.origin.x, calculatedRect.origin.y);
+    
+    CIFilter *transformFilter = [CIFilter filterWithName:@"CIAffineTransform"];
+    [transformFilter setValue:affineTransform forKey:@"inputTransform"];
+    return transformFilter;
+}
+
+- (CIFilter *) transformFilterWithDict:(NSDictionary *)transformDict
+{
+    CIFilter *transformFilter = [CIFilter filterWithName:@"CIPerspectiveTransform"];
+    [transformFilter setValue:transformDict[@"topLeftVector"] forKey:@"inputTopLeft"];
+    [transformFilter setValue:transformDict[@"topRightVector"] forKey:@"inputTopRight"];
+    [transformFilter setValue:transformDict[@"bottomLeftVector"] forKey:@"inputBottomLeft"];
+    [transformFilter setValue:transformDict[@"bottomRightVector"] forKey:@"inputBottomRight"];
+    
+    return transformFilter;
+}
+
+- (NSDictionary *)perspectiveDictionary
+{
+    CIVector *topLeftVector = [CIVector vectorWithX:0 Y:800];
+    CIVector *bottomLeftVector = [CIVector vectorWithX:400 Y:0];
+
+    CIVector *topRightVector = [CIVector vectorWithX:1280 Y:800];
+    CIVector *bottomRightVector = [CIVector vectorWithX:1280 Y:0];
+    
+    NSDictionary *perspectiveDict = @{
+                                      @"topLeftVector" : topLeftVector,
+                                      @"topRightVector" : topRightVector,
+                                      @"bottomLeftVector" : bottomLeftVector,
+                                      @"bottomRightVector" : bottomRightVector
+                                      };
+    return perspectiveDict;
 }
 
 @end
