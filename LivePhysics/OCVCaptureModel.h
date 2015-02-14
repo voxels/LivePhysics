@@ -17,7 +17,6 @@ extern const CGFloat kDetectSessionHeight;
 
 - (void) captureModelDidFindKeypoints:(NSArray *)keypoints;
 - (void) captureModelDidFindContours:(NSArray *)contours;
-- (void) modifyCameraTextureWithMutableTexture:(SKMutableTexture *)cameraTexture;
 
 @end
 
