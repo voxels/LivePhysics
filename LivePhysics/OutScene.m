@@ -11,9 +11,9 @@
 #import "CaptureTextureModel.h"
 #import "Keypoint.h"
 
-const NSInteger kOutSceneMaxCountours = 40;
-const NSInteger kOutSceneMaxCorners = 250;
-const NSInteger kOutSceneMaxKeypoints = 100;
+const NSInteger kOutSceneMaxCountours = 10;
+const NSInteger kOutSceneMaxCorners = 20;
+const NSInteger kOutSceneMaxKeypoints = 15;
 const NSInteger kOutSceneMaxFields = 15;
 
 #define ADDPOINTS 1
@@ -24,15 +24,20 @@ const NSInteger kOutSceneMaxFields = 15;
 @property (strong) CaptureTextureModel *textureModel;
 @property (strong) SKEffectNode *rootNode;
 @property (strong) SKEffectNode *contoursNode;
+@property (strong) SKSpriteNode *cropMaskNode;
+@property (strong) SKCropNode *contoursCropNode;
 @property (strong) SKEffectNode *cornersNode;
 @property (strong) SKEffectNode *keypointsNode;
 @property (strong) SKEffectNode *warpNode;
 @property (strong) SKView *viewRef;
 @property (strong) SKSpriteNode *cameraTextureSprite;
 @property (strong) SKTexture *saveTexture;
-@property (strong) SKSpriteNode *renderedNode;
+@property (strong) SKMutableTexture *renderedTexture;
+@property (strong) SKSpriteNode *renderedSpriteNode;
+@property (strong) SKEffectNode *renderedEffectNode;
 @property (strong) SKEmitterNode *particleEmitterNode;
 @property (strong) SKEmitterNode *trailsEmitterNode;
+@property (strong) CIFilter *transformFilter;
 
 @end
 
@@ -97,17 +102,42 @@ const NSInteger kOutSceneMaxFields = 15;
 - (void) didMoveToView:(SKView *)view
 {
     self.viewRef = view;
+    self.backgroundColor = [SKColor blackColor];
+    [self setupFilter];
     [self setupRootNode];
+    [self setupRenderedNode];
     [self setupEmitterNode];
     [self setupTrailsNode];
     [self setupCameraTextureSprite];
     [self addChild:self.rootNode];
 }
 
+- (void) setupFilter
+{
+    /*
+    
+    self.transformFilter = [CIFilter filterWithName:@"CIPerspectiveTransform"];
+    [self.transformFilter setValue:[CIVector vectorWithX:100 Y:150] forKey:@"inputBottomLeft"];
+    [self.transformFilter setValue:[CIVector vectorWithX:300 Y:150] forKey:@"inputBottomRight"];
+    [self.transformFilter setValue:[CIVector vectorWithX:100 Y:350] forKey:@"inputTopLeft"];
+    [self.transformFilter setValue:[CIVector vectorWithX:300 Y:350] forKey:@"inputTopRight"];
+     */
+}
+
+
 - (void) setupRootNode
 {
     self.rootNode = [[SKEffectNode alloc] init];
-    self.rootNode.zPosition = 2.f;
+    self.rootNode.zPosition = 1;
+    self.rootNode.shouldEnableEffects = YES;
+    self.rootNode.shouldRasterize = YES;
+    self.rootNode.shouldCenterFilter = YES;
+//    self.rootNode.filter = self.transformFilter;
+    
+    self.cropMaskNode = [[SKSpriteNode alloc] initWithColor:[SKColor whiteColor] size:self.view.frame.size];
+    
+    self.contoursCropNode = [[SKCropNode alloc] init];
+    self.contoursCropNode.maskNode = [self.cropMaskNode copy];
     
     self.contoursNode = [[SKEffectNode alloc] init];
     self.contoursNode.zPosition = 1.f;
@@ -123,10 +153,29 @@ const NSInteger kOutSceneMaxFields = 15;
     self.warpNode.zPosition = 6;
     self.warpNode.blendMode = SKBlendModeMultiply;
     
-    [self.rootNode addChild:self.contoursNode];
+    [self.contoursCropNode addChild:self.contoursNode];
+    
+    [self.rootNode addChild:self.contoursCropNode];
     [self.rootNode addChild:self.warpNode];
     [self.rootNode addChild:self.keypointsNode];
     [self.rootNode addChild:self.cornersNode];
+    
+    self.renderedEffectNode = [[SKEffectNode alloc] init];
+    self.renderedEffectNode.zPosition = 10;
+    self.renderedEffectNode.shouldEnableEffects = YES;
+    [self addChild:self.renderedEffectNode];
+}
+
+- (void) setupRenderedNode
+{
+    CIFilter *renderedFilter = [CIFilter filterWithName:@"CIColorInvert"];
+    
+    self.renderedSpriteNode = [[SKSpriteNode alloc] initWithTexture:self.saveTexture];
+    self.renderedSpriteNode.size = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
+    self.renderedSpriteNode.position = CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height / 2.f);
+    self.renderedSpriteNode.zPosition = 10;
+    self.renderedEffectNode.filter = renderedFilter;
+    [self.renderedEffectNode addChild:self.renderedSpriteNode];
 }
 
 - (CGMutablePathRef) pathForWarp
@@ -201,7 +250,7 @@ const NSInteger kOutSceneMaxFields = 15;
 {
     int availableCount = kOutSceneMaxCountours - (int)self.contoursNode.children.count;
     
-    if( availableCount > 0 )
+    if( availableCount > 0  )
     {
         for( int ii = 0; ii < availableCount; ++ii )
         {
@@ -232,13 +281,13 @@ const NSInteger kOutSceneMaxFields = 15;
 //            SKPhysicsBody *body = [SKPhysicsBody bodyWithEdgeChainFromPath:path.quartzPath];
 //            thisPath.physicsBody = body;
             thisPath.strokeColor = [SKColor colorWithWhite:1.f alpha:0.9f];
-            thisPath.lineWidth = 1.f;
-            thisPath.glowWidth = 2.f;
+            thisPath.lineWidth = 2.f;
+            thisPath.glowWidth = 3.f;
             thisPath.zPosition = 5;
             thisPath.lineCap = kCGLineCapRound;
             thisPath.lineJoin = kCGLineJoinRound;
             
-            double val = ((double)arc4random_uniform(2000)/1000);
+            double val = ((double)arc4random_uniform(8000)/1000);
             SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
             SKAction *dieAction = [SKAction removeFromParent];
             SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
@@ -308,7 +357,7 @@ const NSInteger kOutSceneMaxFields = 15;
     SKPhysicsBody *body = [SKPhysicsBody bodyWithCircleOfRadius:1];
     spriteNode.physicsBody = body;
     
-    double val = ((double)arc4random_uniform(2000)/1000);
+    double val = ((double)arc4random_uniform(500)/1000);
     double rot = arc4random_uniform(5);
     SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
     SKAction *growAction = [SKAction scaleBy:4.0 duration:val];
@@ -346,7 +395,7 @@ const NSInteger kOutSceneMaxFields = 15;
     CGPoint point = CGPointMake((self.view.bounds.size.width - keypoint.pt.x)*2.f - 1280.f, (self.view.bounds.size.height - keypoint.pt.y)*2.f - 800.f);
 
     node.position = point;
-    double val = ((double)arc4random_uniform(6000)/1000);
+    double val = ((double)arc4random_uniform(5000)/1000);
     SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
     SKAction *dieAction = [SKAction removeFromParent];
     SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
@@ -406,18 +455,21 @@ const NSInteger kOutSceneMaxFields = 15;
     return node;
 }
 
+- (void) update:(NSTimeInterval)currentTime
+{
+    CGRect rect = self.contoursNode.calculateAccumulatedFrame;
+    NSLog(@"%f\t%f\t%f\t%f", CGRectGetMinX(rect), CGRectGetMinY(rect), CGRectGetWidth(rect), CGRectGetHeight(rect));
+    self.saveTexture = [self.view textureFromNode:self.contoursNode];
+    self.renderedSpriteNode.texture = self.saveTexture;
+    CGFloat scaleX = (CGRectGetMaxX(rect) - CGRectGetMinX(rect)) / 1280.f;
+    CGFloat scaleY = (CGRectGetMaxY(rect) - CGRectGetMinY(rect)) / 800.f;
+    [self.renderedEffectNode setXScale:scaleX];
+    [self.renderedEffectNode setYScale:scaleY];
+    NSLog(@"%f\t%f\n\n", self.renderedEffectNode.xScale, self.renderedEffectNode.yScale);    
+}
 
 - (void) didFinishUpdate
 {
-//    self.saveTexture = [self.view textureFromNode:self.rootNode];
-//    self.renderedNode.texture = self.saveTexture;
-//    if( !_renderedNode )
-//    {
-//        self.renderedNode = [[SKSpriteNode alloc] initWithTexture:self.saveTexture];
-//        self.renderedNode.size = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
-//        self.renderedNode.position = CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height / 2.f);
-//        self.renderedNode.zPosition = 10;
-//        [self addChild:self.renderedNode];
-//    }
+    
 }
 @end
