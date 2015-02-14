@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import <SpriteKit/SpriteKit.h>
 
-@interface OutScene : SKScene
+@interface RenderScene : SKScene
 
 - (void) addKeyPoints:(NSArray *) keypoints;
 - (void) addContours:(NSArray *)contours;

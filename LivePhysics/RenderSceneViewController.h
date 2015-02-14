@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import <SpriteKit/SpriteKit.h>
 
-@interface OutSceneViewController : ViewController
-@property (strong) IBOutlet SKView *outSceneView;
+@interface RenderSceneViewController : ViewController
+@property (strong) IBOutlet SKView *renderSceneView;
 
 @end

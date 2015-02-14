@@ -6,18 +6,18 @@
 //  Copyright (c) 2015 Noise Derived. All rights reserved.
 //
 
-#import "OutSceneViewController.h"
-#import "OutScene.h"
+#import "RenderSceneViewController.h"
+#import "RenderScene.h"
 #import "OCVCaptureModel.h"
 
-@interface OutSceneViewController () <OCVCaptureModelDelegate>
+@interface RenderSceneViewController () <OCVCaptureModelDelegate>
 
-@property (strong, nonatomic) OutScene *outScene;
+@property (strong, nonatomic) RenderScene *outScene;
 @property (strong, nonatomic) OCVCaptureModel *captureModel;
 
 @end
 
-@implementation OutSceneViewController
+@implementation RenderSceneViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -27,15 +27,15 @@
 
     if(!_outScene )
     {
-        self.outScene = [[OutScene alloc] initWithSize:CGSizeMake(1280, 800)];
+        self.outScene = [[RenderScene alloc] initWithSize:CGSizeMake(1280, 800)];
         self.outScene.physicsWorld.gravity = CGVectorMake(0.f, 0.1f);
 //        self.outScene.scaleMode = SKSceneScaleModeAspectFit;
     }
     
 //    self.outSceneView.ignoresSiblingOrder = YES;
-    self.outSceneView.showsFPS = YES;
-    self.outSceneView.showsNodeCount = YES;
-    [self.outSceneView presentScene:self.outScene];
+    self.renderSceneView.showsFPS = YES;
+    self.renderSceneView.showsNodeCount = YES;
+    [self.renderSceneView presentScene:self.outScene];
 }
 
 

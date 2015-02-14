@@ -10,12 +10,18 @@
 
 @interface AppDelegate ()
 
+@property NSWindowController *skewController;
+
 @end
 
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     // Insert code here to initialize your application
+    
+    NSStoryboard *storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil]; // get a reference to the storyboard
+    _skewController = [storyBoard instantiateControllerWithIdentifier:@"skewWindowController"]; // instantiate your window controller
+    [_skewController showWindow:self];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {

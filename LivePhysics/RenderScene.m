@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Noise Derived. All rights reserved.
 //
 
-#import "OutScene.h"
+#import "RenderScene.h"
 #import "OCVCaptureModel.h"
 #import "CaptureTextureModel.h"
 #import "Keypoint.h"
@@ -21,7 +21,7 @@ const NSInteger kOutSceneMaxFields = 15;
 #define ADDPOINTS 1
 #define ADDCONTOURS 1
 
-@interface OutScene ()
+@interface RenderScene ()
 
 @property (strong) CaptureTextureModel *textureModel;
 
@@ -96,7 +96,7 @@ const NSInteger kOutSceneMaxFields = 15;
 }
 @end
 
-@implementation OutScene
+@implementation RenderScene
 
 - (void) didMoveToView:(SKView *)view
 {

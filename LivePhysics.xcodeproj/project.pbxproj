@@ -12,8 +12,8 @@
 		1E4A65161A789873002B8A71 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E4A65151A789873002B8A71 /* CoreVideo.framework */; };
 		1E65662E1A7D4FAB00B0A091 /* Keypoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E65662D1A7D4FAB00B0A091 /* Keypoint.m */; };
 		1E6566381A7D5F4F00B0A091 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E6566371A7D5F4F00B0A091 /* SpriteKit.framework */; };
-		1E65663B1A7D5F7E00B0A091 /* OutScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E65663A1A7D5F7E00B0A091 /* OutScene.m */; };
-		1E65663E1A7D672C00B0A091 /* OutSceneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E65663D1A7D672C00B0A091 /* OutSceneViewController.m */; };
+		1E65663B1A7D5F7E00B0A091 /* RenderScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E65663A1A7D5F7E00B0A091 /* RenderScene.m */; };
+		1E65663E1A7D672C00B0A091 /* RenderSceneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E65663D1A7D672C00B0A091 /* RenderSceneViewController.m */; };
 		1E6566411A7D67A200B0A091 /* OCVCaptureModel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1E6566401A7D67A200B0A091 /* OCVCaptureModel.mm */; };
 		1E6566441A7D73D300B0A091 /* CaptureTextureModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E6566431A7D73D300B0A091 /* CaptureTextureModel.m */; };
 		1E76A55A1A845E560026F7CD /* MagicParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 1E76A5591A845E560026F7CD /* MagicParticle.sks */; };
@@ -58,10 +58,10 @@
 		1E65662C1A7D4FAB00B0A091 /* Keypoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keypoint.h; sourceTree = "<group>"; };
 		1E65662D1A7D4FAB00B0A091 /* Keypoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Keypoint.m; sourceTree = "<group>"; };
 		1E6566371A7D5F4F00B0A091 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
-		1E6566391A7D5F7E00B0A091 /* OutScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutScene.h; sourceTree = "<group>"; };
-		1E65663A1A7D5F7E00B0A091 /* OutScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OutScene.m; sourceTree = "<group>"; };
-		1E65663C1A7D672C00B0A091 /* OutSceneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutSceneViewController.h; sourceTree = "<group>"; };
-		1E65663D1A7D672C00B0A091 /* OutSceneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OutSceneViewController.m; sourceTree = "<group>"; };
+		1E6566391A7D5F7E00B0A091 /* RenderScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderScene.h; sourceTree = "<group>"; };
+		1E65663A1A7D5F7E00B0A091 /* RenderScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RenderScene.m; sourceTree = "<group>"; };
+		1E65663C1A7D672C00B0A091 /* RenderSceneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderSceneViewController.h; sourceTree = "<group>"; };
+		1E65663D1A7D672C00B0A091 /* RenderSceneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RenderSceneViewController.m; sourceTree = "<group>"; };
 		1E65663F1A7D67A200B0A091 /* OCVCaptureModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCVCaptureModel.h; sourceTree = "<group>"; };
 		1E6566401A7D67A200B0A091 /* OCVCaptureModel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OCVCaptureModel.mm; sourceTree = "<group>"; };
 		1E6566421A7D73D300B0A091 /* CaptureTextureModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptureTextureModel.h; sourceTree = "<group>"; };
@@ -153,10 +153,10 @@
 			children = (
 				1E76DEAF1A787AA40073075F /* ViewController.h */,
 				1E76DEB01A787AA40073075F /* ViewController.m */,
-				1E65663C1A7D672C00B0A091 /* OutSceneViewController.h */,
-				1E65663D1A7D672C00B0A091 /* OutSceneViewController.m */,
-				1E6566391A7D5F7E00B0A091 /* OutScene.h */,
-				1E65663A1A7D5F7E00B0A091 /* OutScene.m */,
+				1E65663C1A7D672C00B0A091 /* RenderSceneViewController.h */,
+				1E65663D1A7D672C00B0A091 /* RenderSceneViewController.m */,
+				1E6566391A7D5F7E00B0A091 /* RenderScene.h */,
+				1E65663A1A7D5F7E00B0A091 /* RenderScene.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -350,11 +350,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E65663E1A7D672C00B0A091 /* OutSceneViewController.m in Sources */,
+				1E65663E1A7D672C00B0A091 /* RenderSceneViewController.m in Sources */,
 				1E6566411A7D67A200B0A091 /* OCVCaptureModel.mm in Sources */,
 				1EC1BD581A8FD10A00CB180C /* DeadEffectNode.m in Sources */,
 				1E76DEB11A787AA40073075F /* ViewController.m in Sources */,
-				1E65663B1A7D5F7E00B0A091 /* OutScene.m in Sources */,
+				1E65663B1A7D5F7E00B0A091 /* RenderScene.m in Sources */,
 				1E76DEAE1A787AA40073075F /* main.m in Sources */,
 				1E76DEAC1A787AA40073075F /* AppDelegate.m in Sources */,
 				1E76DEDB1A78803D0073075F /* OCVSimpleBlobs.cpp in Sources */,

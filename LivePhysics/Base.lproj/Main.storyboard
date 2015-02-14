@@ -664,42 +664,52 @@
             </objects>
             <point key="canvasLocation" x="75" y="250"/>
         </scene>
-        <!--Out Scene View Controller-->
+        <!--Window Controller-->
+        <scene sceneID="vhP-fU-Uq3">
+            <objects>
+                <windowController storyboardIdentifier="skewWindowController" id="KZA-yu-mSY" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="6bT-Fb-nap">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="-158" y="1213" width="480" height="270"/>
+                        <rect key="screenRect" x="-583" y="900" width="2560" height="1057"/>
+                    </window>
+                    <connections>
+                        <segue destination="RTF-Pv-sC3" kind="relationship" relationship="window.shadowedContentViewController" id="QsR-if-3dX"/>
+                    </connections>
+                </windowController>
+                <customObject id="iFE-Es-YAm" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="10" y="1326"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="LoL-jO-iwj">
+            <objects>
+                <viewController id="RTF-Pv-sC3" sceneMemberID="viewController">
+                    <view key="view" id="Xcy-kJ-Fbl">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="iXY-Ob-a2d" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="695" y="1326"/>
+        </scene>
+        <!--Render Scene View Controller-->
         <scene sceneID="2Yb-su-EbA">
             <objects>
-                <viewController id="4Lx-hG-4uR" customClass="OutSceneViewController" sceneMemberID="viewController">
+                <viewController id="4Lx-hG-4uR" customClass="RenderSceneViewController" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="86Q-HV-NAk" customClass="SKView">
                         <rect key="frame" x="0.0" y="0.0" width="1280" height="800"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </view>
                     <connections>
-                        <outlet property="outSceneView" destination="86Q-HV-NAk" id="9eB-5S-xyd"/>
+                        <outlet property="renderSceneView" destination="86Q-HV-NAk" id="9OJ-w4-VfK"/>
                     </connections>
                 </viewController>
                 <customObject id="seK-xg-M5k" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2058" y="250"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="hIz-AP-VOD">
-            <objects>
-                <viewController id="XfG-lQ-9wD" customClass="ViewController" sceneMemberID="viewController">
-                    <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <subviews>
-                            <customView wantsLayer="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MPi-Fx-YvF">
-                                <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
-                            </customView>
-                        </subviews>
-                    </view>
-                    <connections>
-                        <outlet property="captureView" destination="MPi-Fx-YvF" id="qa2-CW-VRV"/>
-                    </connections>
-                </viewController>
-                <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="75" y="976"/>
         </scene>
     </scenes>
 </document>

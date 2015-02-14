@@ -12,7 +12,7 @@
 #import <Accelerate/Accelerate.h>
 #import "Keypoint.h"
 #import "OCVSimpleBlobs.h"
-#import "OutScene.h"
+#import "RenderScene.h"
 #import "CaptureTextureModel.h"
 
 const CGFloat kDetectSessionWidth = 1920.f;
