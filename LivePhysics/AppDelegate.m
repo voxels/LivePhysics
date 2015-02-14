@@ -21,6 +21,7 @@
     
     NSStoryboard *storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil]; // get a reference to the storyboard
     _skewController = [storyBoard instantiateControllerWithIdentifier:@"skewWindowController"]; // instantiate your window controller
+    _skewController.window.acceptsMouseMovedEvents = YES;
     [_skewController showWindow:self];
 }
 

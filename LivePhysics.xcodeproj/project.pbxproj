@@ -25,6 +25,8 @@
 		1E76DEB61A787AA40073075F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E76DEB41A787AA40073075F /* Main.storyboard */; };
 		1E76DEC21A787AA40073075F /* LivePhysicsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DEC11A787AA40073075F /* LivePhysicsTests.m */; };
 		1E76DEDB1A78803D0073075F /* OCVSimpleBlobs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DED91A78803D0073075F /* OCVSimpleBlobs.cpp */; };
+		1EBDE3AB1A9007FF0058A5B1 /* SkewParamsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EBDE3AA1A9007FF0058A5B1 /* SkewParamsViewController.m */; };
+		1EBDE3AE1A900CA90058A5B1 /* SkewScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EBDE3AD1A900CA90058A5B1 /* SkewScene.m */; };
 		1EC1BD581A8FD10A00CB180C /* DeadEffectNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EC1BD571A8FD10A00CB180C /* DeadEffectNode.m */; };
 		1EDCE8FB1A7CB27B0088BE13 /* libopencv_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE8FA1A7CB27B0088BE13 /* libopencv_core.a */; };
 		1EDCE92D1A7CB8FD0088BE13 /* CUDA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EDCE92C1A7CB8FD0088BE13 /* CUDA.framework */; };
@@ -82,6 +84,10 @@
 		1E76DEC11A787AA40073075F /* LivePhysicsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LivePhysicsTests.m; sourceTree = "<group>"; };
 		1E76DED91A78803D0073075F /* OCVSimpleBlobs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OCVSimpleBlobs.cpp; sourceTree = "<group>"; };
 		1E76DEDA1A78803D0073075F /* OCVSimpleBlobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCVSimpleBlobs.h; sourceTree = "<group>"; };
+		1EBDE3A91A9007FF0058A5B1 /* SkewParamsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkewParamsViewController.h; sourceTree = "<group>"; };
+		1EBDE3AA1A9007FF0058A5B1 /* SkewParamsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SkewParamsViewController.m; sourceTree = "<group>"; };
+		1EBDE3AC1A900CA90058A5B1 /* SkewScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkewScene.h; sourceTree = "<group>"; };
+		1EBDE3AD1A900CA90058A5B1 /* SkewScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SkewScene.m; sourceTree = "<group>"; };
 		1EC1BD561A8FD10A00CB180C /* DeadEffectNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeadEffectNode.h; sourceTree = "<group>"; };
 		1EC1BD571A8FD10A00CB180C /* DeadEffectNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeadEffectNode.m; sourceTree = "<group>"; };
 		1EDCE8FA1A7CB27B0088BE13 /* libopencv_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopencv_core.a; path = "../../../opencv-2.4.10/StaticLibs/lib/libopencv_core.a"; sourceTree = "<group>"; };
@@ -151,12 +157,8 @@
 		1E6566331A7D5AB000B0A091 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				1E76DEAF1A787AA40073075F /* ViewController.h */,
-				1E76DEB01A787AA40073075F /* ViewController.m */,
-				1E65663C1A7D672C00B0A091 /* RenderSceneViewController.h */,
-				1E65663D1A7D672C00B0A091 /* RenderSceneViewController.m */,
-				1E6566391A7D5F7E00B0A091 /* RenderScene.h */,
-				1E65663A1A7D5F7E00B0A091 /* RenderScene.m */,
+				1EBDE3A81A9007E40058A5B1 /* Skew */,
+				1EBDE3A71A9007D90058A5B1 /* Render */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -234,6 +236,30 @@
 				1E76DEC01A787AA40073075F /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1EBDE3A71A9007D90058A5B1 /* Render */ = {
+			isa = PBXGroup;
+			children = (
+				1E76DEAF1A787AA40073075F /* ViewController.h */,
+				1E76DEB01A787AA40073075F /* ViewController.m */,
+				1E65663C1A7D672C00B0A091 /* RenderSceneViewController.h */,
+				1E65663D1A7D672C00B0A091 /* RenderSceneViewController.m */,
+				1E6566391A7D5F7E00B0A091 /* RenderScene.h */,
+				1E65663A1A7D5F7E00B0A091 /* RenderScene.m */,
+			);
+			name = Render;
+			sourceTree = "<group>";
+		};
+		1EBDE3A81A9007E40058A5B1 /* Skew */ = {
+			isa = PBXGroup;
+			children = (
+				1EBDE3A91A9007FF0058A5B1 /* SkewParamsViewController.h */,
+				1EBDE3AA1A9007FF0058A5B1 /* SkewParamsViewController.m */,
+				1EBDE3AC1A900CA90058A5B1 /* SkewScene.h */,
+				1EBDE3AD1A900CA90058A5B1 /* SkewScene.m */,
+			);
+			name = Skew;
 			sourceTree = "<group>";
 		};
 		1EC1BD551A8FD0DF00CB180C /* Particles */ = {
@@ -350,6 +376,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EBDE3AB1A9007FF0058A5B1 /* SkewParamsViewController.m in Sources */,
 				1E65663E1A7D672C00B0A091 /* RenderSceneViewController.m in Sources */,
 				1E6566411A7D67A200B0A091 /* OCVCaptureModel.mm in Sources */,
 				1EC1BD581A8FD10A00CB180C /* DeadEffectNode.m in Sources */,
@@ -359,6 +386,7 @@
 				1E76DEAC1A787AA40073075F /* AppDelegate.m in Sources */,
 				1E76DEDB1A78803D0073075F /* OCVSimpleBlobs.cpp in Sources */,
 				1E65662E1A7D4FAB00B0A091 /* Keypoint.m in Sources */,
+				1EBDE3AE1A900CA90058A5B1 /* SkewScene.m in Sources */,
 				1E6566441A7D73D300B0A091 /* CaptureTextureModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

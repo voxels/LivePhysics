@@ -650,11 +650,14 @@
         <scene sceneID="R2V-B0-nI4">
             <objects>
                 <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
-                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
+                        <windowCollectionBehavior key="collectionBehavior" fullScreenAuxiliary="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="196" y="240" width="1280" height="800"/>
+                        <rect key="contentRect" x="0.0" y="0.0" width="1280" height="800"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+                        <value key="minSize" type="size" width="1280" height="800"/>
+                        <value key="maxSize" type="size" width="1280" height="800"/>
                     </window>
                     <connections>
                         <segue destination="4Lx-hG-4uR" kind="relationship" relationship="window.shadowedContentViewController" id="MyK-i4-RZY"/>
@@ -668,11 +671,13 @@
         <scene sceneID="vhP-fU-Uq3">
             <objects>
                 <windowController storyboardIdentifier="skewWindowController" id="KZA-yu-mSY" sceneMemberID="viewController">
-                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="6bT-Fb-nap">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="6bT-Fb-nap">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="-158" y="1213" width="480" height="270"/>
+                        <rect key="contentRect" x="0.0" y="0.0" width="640" height="400"/>
                         <rect key="screenRect" x="-583" y="900" width="2560" height="1057"/>
+                        <value key="minSize" type="size" width="640" height="400"/>
+                        <value key="maxSize" type="size" width="640" height="400"/>
                     </window>
                     <connections>
                         <segue destination="RTF-Pv-sC3" kind="relationship" relationship="window.shadowedContentViewController" id="QsR-if-3dX"/>
@@ -682,14 +687,22 @@
             </objects>
             <point key="canvasLocation" x="10" y="1326"/>
         </scene>
-        <!--View Controller-->
+        <!--Skew Params View Controller-->
         <scene sceneID="LoL-jO-iwj">
             <objects>
-                <viewController id="RTF-Pv-sC3" sceneMemberID="viewController">
+                <viewController id="RTF-Pv-sC3" customClass="SkewParamsViewController" sceneMemberID="viewController">
                     <view key="view" id="Xcy-kJ-Fbl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <rect key="frame" x="0.0" y="0.0" width="640" height="400"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MgR-yZ-KLk" customClass="SKView">
+                                <rect key="frame" x="0.0" y="0.0" width="640" height="400"/>
+                            </customView>
+                        </subviews>
                     </view>
+                    <connections>
+                        <outlet property="skewSceneView" destination="MgR-yZ-KLk" id="I00-ys-qOA"/>
+                    </connections>
                 </viewController>
                 <customObject id="iXY-Ob-a2d" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
