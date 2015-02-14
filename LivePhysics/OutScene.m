@@ -31,18 +31,16 @@ const NSInteger kOutSceneMaxFields = 15;
 
 @property (strong) SKEffectNode *liveNode;
 @property (strong) SKEffectNode *deadNode;
-@property (strong) CIFilter *transformFilter;
+@property (strong) SKEffectNode *renderNode;
 
 @property (strong) SKEffectNode *contoursNode;
-@property (strong) SKEffectNode *sparksNode;
 @property (strong) SKEffectNode *fillNode;
+@property (strong) SKEffectNode *sparksNode;
 @property (strong) SKEffectNode *fieldsNode;
 
-@property (strong) SKTexture *deadContoursTexture;
-@property (strong) SKSpriteNode *deadContoursSpriteNode;
-@property (strong) SKEffectNode *deadContoursEffectNode;
-
 @property (strong) DeadEffectNode *contoursDeadNode;
+@property (strong) DeadEffectNode *fillDeadNode;
+@property (strong) DeadEffectNode *sparksDeadNode;
 
 @end
 
@@ -114,16 +112,15 @@ const NSInteger kOutSceneMaxFields = 15;
 
     [self setupLiveNode];
     [self setupDeadNode];
-    
+    [self setupRenderNode];
+
     [self addChild:self.liveNode];
 }
-
-
 
 - (void) setupLiveNode
 {
     self.liveNode = [[SKEffectNode alloc] init];
-    self.liveNode.zPosition = 1;
+    self.liveNode.zPosition = 0;
     
     self.contoursNode = [[SKEffectNode alloc] init];
     self.contoursNode.zPosition = 1.f;
@@ -143,22 +140,79 @@ const NSInteger kOutSceneMaxFields = 15;
     [self.liveNode addChild:self.fieldsNode];
     [self.liveNode addChild:self.fillNode];
     [self.liveNode addChild:self.sparksNode];
-    
 }
+
+- (CIFilter *) positionFilterWithTranslation:(CGRect)calculatedRect atTime:(NSTimeInterval)currentTime;
+{
+    NSAffineTransform *affineTransform = [NSAffineTransform transform];
+    CGFloat scaleX = (CGRectGetMaxX(calculatedRect) - CGRectGetMinX(calculatedRect) ) / self.view.frame.size.width;
+    CGFloat scaleY = (CGRectGetMaxY(calculatedRect) - CGRectGetMinY(calculatedRect) ) / self.view.frame.size.height;
+    [affineTransform scaleXBy:scaleX * 10 yBy:scaleY * 10];
+//    [affineTransform translateXBy:-calculatedRect.origin.x yBy:-calculatedRect.origin.y ];
+
+//    NSLog(@"%f\t%f", calculatedRect.origin.x, calculatedRect.origin.y);
+
+    CIFilter *transformFilter = [CIFilter filterWithName:@"CIAffineTransform"];
+    [transformFilter setValue:affineTransform forKey:@"inputTransform"];
+    return transformFilter;
+}
+
+- (CIFilter *) transformFilterWithDict:(NSDictionary *)transformDict atTimeInterval:(NSTimeInterval)currentTime
+{
+    CIFilter *transformFilter = [CIFilter filterWithName:@"CIPerspectiveTransform"];
+    [transformFilter setValue:transformDict[@"topLeftVector"] forKey:@"inputTopLeft"];
+    [transformFilter setValue:transformDict[@"topRightVector"] forKey:@"inputTopRight"];
+    [transformFilter setValue:transformDict[@"bottomLeftVector"] forKey:@"inputBottomLeft"];
+    [transformFilter setValue:transformDict[@"bottomRightVector"] forKey:@"inputBottomRight"];
+    
+    return transformFilter;
+}
+
 
 - (void) setupDeadNode
 {
     self.deadNode = [[SKEffectNode alloc] init];
-    self.deadNode.zPosition = 10;
-
-    CIFilter *renderedFilter = [CIFilter filterWithName:@"CIColorInvert"];
-    self.contoursDeadNode = [[DeadEffectNode alloc] initWithView:self.view];
-    self.contoursDeadNode.filter = renderedFilter;
-    self.contoursDeadNode.zPosition = 10;
+    self.deadNode.zPosition = 0;
+//    self.deadNode.filter = [self transformFilterWithDict:self.perspectiveDictionary atTimeInterval:0];
     
-    [self addChild:self.contoursDeadNode];
+    self.contoursDeadNode = [[DeadEffectNode alloc] initWithView:self.view];
+    self.contoursDeadNode.zPosition = 3;
+    
+    self.fillDeadNode = [[DeadEffectNode alloc] initWithView:self.view];
+    self.fillDeadNode.zPosition = 4;
+    
+    self.sparksDeadNode = [[DeadEffectNode alloc] initWithView:self.view];
+    self.sparksDeadNode.zPosition = 5;
+    
+    [self.deadNode addChild:self.contoursDeadNode];
+    [self.deadNode addChild:self.fillDeadNode];
+    [self.deadNode addChild:self.sparksDeadNode];
 }
 
+- (void) setupRenderNode
+{
+    self.renderNode = [[SKEffectNode alloc] init];
+    self.renderNode.zPosition = 2;
+    [self.renderNode addChild:self.deadNode];
+    [self addChild:self.renderNode];
+}
+
+
+- (NSDictionary *)perspectiveDictionary
+{
+    CIVector *topLeftVector = [CIVector vectorWithX:100 Y:350];
+    CIVector *topRightVector = [CIVector vectorWithX:300 Y:350];
+    CIVector *bottomLeftVector = [CIVector vectorWithX:100 Y:150];
+    CIVector *bottomRightVector = [CIVector vectorWithX:300 Y:150];
+    
+    NSDictionary *perspectiveDict = @{
+                                      @"topLeftVector" : topLeftVector,
+                                      @"topRightVector" : topRightVector,
+                                      @"bottomLeftVector" : bottomLeftVector,
+                                      @"bottomRightVector" : bottomRightVector
+                                      };
+    return perspectiveDict;
+}
 
 - (void) setupEmitterNode
 {
@@ -179,7 +233,7 @@ const NSInteger kOutSceneMaxFields = 15;
     self.cameraTextureSprite = [SKSpriteNode spriteNodeWithTexture:self.textureModel.cameraTexture size:CGSizeMake(1920, 1080)];
     self.cameraTextureSprite.size = CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height);
     self.cameraTextureSprite.position = CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height / 2.f);
-    self.cameraTextureSprite.zPosition = 0;
+    self.cameraTextureSprite.zPosition = 1;
     [self addChild:self.cameraTextureSprite];
 }
 
@@ -428,18 +482,39 @@ const NSInteger kOutSceneMaxFields = 15;
 - (void) update:(NSTimeInterval)currentTime
 {
     [self updateDeadContours];
+    [self updateDeadFills];
+    [self updateDeadSparks];
 
+//    self.deadNode.filter = [self transformFilterWithDict:self.perspectiveDictionary atTimeInterval:currentTime];
+    
+//    self.renderNode.filter = [self positionFilterWithTranslation:self.deadNode.calculateAccumulatedFrame];
+    
+//    CGRect calculatedFrame = CGRectMake(self.deadNode.calculateAccumulatedFrame.origin.x, self.deadNode.calculateAccumulatedFrame.origin.y, self.deadNode.calculateAccumulatedFrame.size.width, self.deadNode.calculateAccumulatedFrame.size.height);
+//    [self setupTransformFilterWithTranslation:calculatedFrame];
+
+}
+
+- (void) didFinishUpdate
+{
 }
 
 
 - (void) updateDeadContours
 {
     CGRect rect = self.contoursNode.calculateAccumulatedFrame;
-    [self.contoursDeadNode updateSpriteTexture:[self.view textureFromNode:self.contoursNode] forRect:rect];
+    [self.contoursDeadNode updateSpriteTexture:[self.view textureFromNode:self.contoursNode crop:self.view.bounds] forRect:rect];
 }
 
-- (void) didFinishUpdate
+- (void) updateDeadFills
 {
-    
+    CGRect rect = self.fillNode.calculateAccumulatedFrame;
+    [self.fillDeadNode updateSpriteTexture:[self.view textureFromNode:self.fillNode crop:self.view.bounds] forRect:rect];
 }
+
+- (void) updateDeadSparks
+{
+    CGRect rect = self.sparksNode.calculateAccumulatedFrame;
+    [self.sparksDeadNode updateSpriteTexture:[self.view textureFromNode:self.sparksNode crop:self.view.bounds] forRect:rect];
+}
+
 @end

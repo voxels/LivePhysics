@@ -226,6 +226,8 @@ const CGFloat kDetectMinDist = 70.f;
 
 - (void) toCameraTexture:(CMSampleBufferRef)sampleBuffer
 {
+    // CHANGE TO IOSURFACE / CIIMAGE
+    
     CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
     CVPixelBufferLockBaseAddress(pixelBuffer, 0);
     

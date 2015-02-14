@@ -41,7 +41,6 @@
 
 - (void) setupSpriteWithView:(SKView *)skView
 {
-    NSLog(@"%f", skView.frame.size.width);
     self.viewSize = CGSizeMake( CGRectGetWidth(skView.bounds), CGRectGetHeight(skView.bounds) );
     self.spriteNode = [[SKSpriteNode alloc] init];
     self.spriteNode.size = skView.bounds.size;
@@ -53,10 +52,11 @@
 - (void) updateSpriteTexture:(SKTexture *)updatedTexture forRect:(CGRect)calculatedRect
 {
     self.spriteNode.texture = updatedTexture;
-    CGFloat scaleX = (CGRectGetMaxX(calculatedRect) - CGRectGetMinX(calculatedRect)) / 1280;
-    CGFloat scaleY = (CGRectGetMaxY(calculatedRect) - CGRectGetMinY(calculatedRect)) / 800;
+    CGFloat scaleX = (CGRectGetMaxX(calculatedRect) - CGRectGetMinX(calculatedRect)) / self.viewSize.width;
+    CGFloat scaleY = (CGRectGetMaxY(calculatedRect) - CGRectGetMinY(calculatedRect)) / self.viewSize.height;
     [self setXScale:scaleX];
     [self setYScale:scaleY];
+    [self setPosition:CGPointMake(calculatedRect.origin.x, calculatedRect.origin.y)];
 }
 
 @end
