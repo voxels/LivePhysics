@@ -100,6 +100,8 @@ const NSInteger kOutSceneMaxFields = 15;
 
 - (void) didMoveToView:(SKView *)view
 {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePointsMoved:) name:@"movedPoints" object:nil];
+    
     self.backgroundColor = [SKColor blackColor];
     
     [self setupEmitterNode];
@@ -108,6 +110,11 @@ const NSInteger kOutSceneMaxFields = 15;
     [self setupLiveNode];
     [self setupCameraTextureSprite];
     [self setupDeadNode];
+}
+
+- (void) willMoveFromView:(SKView *)view
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void) setupLiveNode
@@ -412,6 +419,11 @@ const NSInteger kOutSceneMaxFields = 15;
 - (void) update:(NSTimeInterval)currentTime
 {
     [self.deadNode updateSpriteTexture:[self.view textureFromNode:self.liveNode crop:self.view.frame]];
+}
+
+- (void) handlePointsMoved:(NSNotification *)notification
+{
+    [self.deadNode updateTransformWithDictionary:notification.object];
 }
 
 

@@ -15,5 +15,6 @@
 - (id) initWithView:(SKView *)skView;
 
 - (void) updateSpriteTexture:(SKTexture *)updatedTexture;
+- (void) updateTransformWithDictionary:(NSDictionary *)dict;
 
 @end

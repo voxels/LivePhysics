@@ -51,7 +51,7 @@
 
 - (void) setupFilter
 {
-    self.xFormFilter = [self transformFilterWithDict:self.perspectiveDictionary];
+    self.xFormFilter = [self transformFilterWithDict:self.identityDict];
     self.filter = self.xFormFilter;
 }
 
@@ -88,10 +88,10 @@
     return transformFilter;
 }
 
-- (NSDictionary *)perspectiveDictionary
+- (NSDictionary *)identityDict
 {
     CIVector *topLeftVector = [CIVector vectorWithX:0 Y:800];
-    CIVector *bottomLeftVector = [CIVector vectorWithX:400 Y:0];
+    CIVector *bottomLeftVector = [CIVector vectorWithX:0 Y:0];
 
     CIVector *topRightVector = [CIVector vectorWithX:1280 Y:800];
     CIVector *bottomRightVector = [CIVector vectorWithX:1280 Y:0];
@@ -103,6 +103,29 @@
                                       @"bottomRightVector" : bottomRightVector
                                       };
     return perspectiveDict;
+}
+
+
+- (void) updateTransformWithDictionary:(NSDictionary *)dict
+{
+    NSLog(@"%@", dict);
+    
+    CIVector *topLeftScale = dict[@"topLeftScale"];
+    CIVector *topRightScale = dict[@"topRightScale"];
+    CIVector *bottomLeftScale = dict[@"bottomLeftScale"];
+    CIVector *bottomRightScale = dict[@"bottomRightScale"];
+    
+    CIVector *identityTopLeftVector = [self.identityDict valueForKey:@"topLeftVector"];
+    CIVector *identityTopRightVector = [self.identityDict valueForKey:@"topRightVector"];
+    CIVector *identityBottomLeftVector = [self.identityDict valueForKey:@"bottomLeftVector"];
+    CIVector *identityBottomRightVector = [self.identityDict valueForKey:@"bottomRightVector"];
+    
+    CIVector *newTopLeftVector = [CIVector vectorWithX:identityTopLeftVector.X * topLeftScale.X  Y:identityTopLeftVector.Y * topLeftScale.Y];
+    CIVector *newTopRightVector = [CIVector vectorWithX:identityTopRightVector.X * topRightScale.X  Y:identityTopRightVector.Y * topRightScale.Y];
+    CIVector *newBottomLeftVector = [CIVector vectorWithX:identityBottomLeftVector.X * bottomLeftScale.X  Y:identityBottomLeftVector.Y * bottomLeftScale.Y];
+    CIVector *newBottomRightVector = [CIVector vectorWithX:identityBottomRightVector.X * bottomRightScale.X  Y:identityBottomRightVector.Y * bottomRightScale.Y];
+    
+    NSLog(@"%@\t%@\t%@", topRightScale, identityTopRightVector, newTopRightVector);
 }
 
 @end

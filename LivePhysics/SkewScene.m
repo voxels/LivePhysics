@@ -117,8 +117,36 @@ CGFloat kHandleSize = 10;
              @"topLeftPoint" : [NSValue valueWithPoint:topLeftPoint],
              @"topRightPoint" : [NSValue valueWithPoint:topRightPoint],
              @"bottomRightPoint" : [NSValue valueWithPoint:bottomRightPoint],
-             @"bottomLeftPoint" : [NSValue valueWithPoint:bottomLeftPoint]
+             @"bottomLeftPoint" : [NSValue valueWithPoint:bottomLeftPoint],
              };
+}
+
+- (NSDictionary *)scaleConditions
+{
+    NSDictionary *initial = [self initialConditions];
+
+    NSValue *initialTopLeftPoint = initial[@"topLeftPoint"];
+    NSValue *initialTopRightPoint = initial[@"topRightPoint"];
+    NSValue *initialBottomLeftPoint = initial[@"bottomLeftPoint"];
+    NSValue *initialBottomRightPoint = initial[@"bottomRightPoint"];
+
+    NSValue *currentTopLeftPoint = self.outputShapePoints[@"topLeftPoint"];
+    NSValue *currentTopRightPoint = self.outputShapePoints[@"topRightPoint"];
+    NSValue *currentBottomLeftPoint = self.outputShapePoints[@"bottomLeftPoint"];
+    NSValue *currentBottomRightPoint = self.outputShapePoints[@"bottomRightPoint"];
+    
+    CGFloat initialWidth = initialTopRightPoint.pointValue.x - initialBottomLeftPoint.pointValue.x;
+    CGFloat initialHeight = initialTopRightPoint.pointValue.y - initialBottomLeftPoint.pointValue.y;
+    
+    CIVector *scaleTopLeft = [CIVector vectorWithX:(currentTopLeftPoint.pointValue.x - initialTopLeftPoint.pointValue.x) / initialWidth + 1 Y:(currentTopLeftPoint.pointValue.y - initialTopLeftPoint.pointValue.y) / initialHeight + 1];
+
+    CIVector *scaleTopRight = [CIVector vectorWithX:(currentTopRightPoint.pointValue.x - initialTopRightPoint.pointValue.x) / initialWidth + 1 Y:(currentTopRightPoint.pointValue.y - initialTopRightPoint.pointValue.y) / initialHeight + 1];
+
+    CIVector *scaleBottomLeft = [CIVector vectorWithX:(currentBottomLeftPoint.pointValue.x - initialBottomLeftPoint.pointValue.x) / initialWidth + 1 Y:(currentBottomLeftPoint.pointValue.y - initialBottomLeftPoint.pointValue.y) / initialHeight + 1];
+
+    CIVector *scaleBottomRight = [CIVector vectorWithX:(currentBottomRightPoint.pointValue.x - initialBottomRightPoint.pointValue.x) / initialWidth + 1 Y:(currentBottomRightPoint.pointValue.y - initialBottomRightPoint.pointValue.y) / initialHeight + 1];
+    
+    return @{ @"topLeftScale" : scaleTopLeft, @"topRightScale" : scaleTopRight, @"bottomLeftScale" : scaleBottomLeft, @"bottomRightScale" : scaleBottomRight };
 }
 
 - (void) setupSurface
@@ -168,7 +196,7 @@ CGFloat kHandleSize = 10;
     [path lineToPoint:bottomLeftPoint.pointValue];
     [path closePath];
     
-    self.outputShapeNode = [SKShapeNode shapeNodeWithPath:[self pathWithDictionary:positions].quartzPath];
+    self.outputShapeNode = [SKShapeNode shapeNodeWithPath:[self pathWithDictionary:positions.mutableCopy].quartzPath];
     self.outputShapeNode.fillColor = [SKColor darkGrayColor];
     self.outputShapeNode.zPosition = 0;
     [self.surfaceNode addChild:self.outputShapeNode];
@@ -199,7 +227,7 @@ CGFloat kHandleSize = 10;
     node.position = location;
     [self.outputShapePoints setValue:[NSValue valueWithPoint:location] forKey:node.name];
     self.outputShapeNode.path = [self pathWithDictionary:self.outputShapePoints].quartzPath;
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"movedPoints" object:self.scaleConditions];
 }
 
 
