@@ -120,10 +120,13 @@
     CIVector *identityBottomLeftVector = [self.identityDict valueForKey:@"bottomLeftVector"];
     CIVector *identityBottomRightVector = [self.identityDict valueForKey:@"bottomRightVector"];
     
-    CIVector *newTopLeftVector = [CIVector vectorWithX:identityTopLeftVector.X * topLeftScale.X  Y:identityTopLeftVector.Y * topLeftScale.Y];
-    CIVector *newTopRightVector = [CIVector vectorWithX:identityTopRightVector.X * topRightScale.X  Y:identityTopRightVector.Y * topRightScale.Y];
-    CIVector *newBottomLeftVector = [CIVector vectorWithX:identityBottomLeftVector.X * bottomLeftScale.X  Y:identityBottomLeftVector.Y * bottomLeftScale.Y];
-    CIVector *newBottomRightVector = [CIVector vectorWithX:identityBottomRightVector.X * bottomRightScale.X  Y:identityBottomRightVector.Y * bottomRightScale.Y];
+    CIVector *newTopLeftVector = [CIVector vectorWithX:identityTopLeftVector.X + self.viewSize.width * topLeftScale.X  Y:identityTopLeftVector.Y + self.viewSize.height * topLeftScale.Y];
+    
+    CIVector *newTopRightVector = [CIVector vectorWithX:identityTopRightVector.X + self.viewSize.width * topRightScale.X  Y:identityTopRightVector.Y + self.viewSize.height * topRightScale.Y];
+    
+    CIVector *newBottomLeftVector = [CIVector vectorWithX:identityBottomLeftVector.X + self.viewSize.width * bottomLeftScale.X  Y:identityBottomLeftVector.Y + self.viewSize.height * bottomLeftScale.Y];
+    
+    CIVector *newBottomRightVector = [CIVector vectorWithX:identityBottomRightVector.X + self.viewSize.width * bottomRightScale.X  Y:identityBottomRightVector.Y + self.viewSize.height * bottomRightScale.Y];
     
     [self.xFormFilter setValue:newTopLeftVector forKey:@"inputTopLeft"];
     [self.xFormFilter setValue:newTopRightVector forKey:@"inputTopRight"];

@@ -138,13 +138,13 @@ CGFloat kHandleSize = 10;
     CGFloat initialWidth = initialTopRightPoint.pointValue.x - initialBottomLeftPoint.pointValue.x;
     CGFloat initialHeight = initialTopRightPoint.pointValue.y - initialBottomLeftPoint.pointValue.y;
     
-    CIVector *scaleTopLeft = [CIVector vectorWithX:(currentTopLeftPoint.pointValue.x - initialTopLeftPoint.pointValue.x) / initialWidth + 1 Y:(currentTopLeftPoint.pointValue.y - initialTopLeftPoint.pointValue.y) / initialHeight + 1];
+    CIVector *scaleTopLeft = [CIVector vectorWithX:(currentTopLeftPoint.pointValue.x - initialTopLeftPoint.pointValue.x) / initialWidth Y:(currentTopLeftPoint.pointValue.y - initialTopLeftPoint.pointValue.y) / initialHeight];
 
-    CIVector *scaleTopRight = [CIVector vectorWithX:(currentTopRightPoint.pointValue.x - initialTopRightPoint.pointValue.x) / initialWidth + 1 Y:(currentTopRightPoint.pointValue.y - initialTopRightPoint.pointValue.y) / initialHeight + 1];
+    CIVector *scaleTopRight = [CIVector vectorWithX:(currentTopRightPoint.pointValue.x - initialTopRightPoint.pointValue.x) / initialWidth Y:(currentTopRightPoint.pointValue.y - initialTopRightPoint.pointValue.y) / initialHeight];
 
-    CIVector *scaleBottomLeft = [CIVector vectorWithX:(currentBottomLeftPoint.pointValue.x - initialBottomLeftPoint.pointValue.x) / initialWidth + 1 Y:(currentBottomLeftPoint.pointValue.y - initialBottomLeftPoint.pointValue.y) / initialHeight + 1];
+    CIVector *scaleBottomLeft = [CIVector vectorWithX:(currentBottomLeftPoint.pointValue.x - initialBottomLeftPoint.pointValue.x) / initialWidth Y:(currentBottomLeftPoint.pointValue.y - initialBottomLeftPoint.pointValue.y) / initialHeight];
 
-    CIVector *scaleBottomRight = [CIVector vectorWithX:(currentBottomRightPoint.pointValue.x - initialBottomRightPoint.pointValue.x) / initialWidth + 1 Y:(currentBottomRightPoint.pointValue.y - initialBottomRightPoint.pointValue.y) / initialHeight + 1];
+    CIVector *scaleBottomRight = [CIVector vectorWithX:(currentBottomRightPoint.pointValue.x - initialBottomRightPoint.pointValue.x) / initialWidth Y:(currentBottomRightPoint.pointValue.y - initialBottomRightPoint.pointValue.y) / initialHeight];
     
     return @{ @"topLeftScale" : scaleTopLeft, @"topRightScale" : scaleTopRight, @"bottomLeftScale" : scaleBottomLeft, @"bottomRightScale" : scaleBottomRight };
 }
