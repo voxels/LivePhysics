@@ -141,6 +141,11 @@ const NSInteger kOutSceneMaxFields = 15;
     [self.liveNode addChild:self.fillNode];
     [self.liveNode addChild:self.sparksNode];
     [self addChild:self.liveNode];
+    
+    SKSpriteNode *coverNode = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:self.view.bounds.size];
+    coverNode.position = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+    coverNode.zPosition = 1;
+    [self addChild: coverNode];
 }
 
 
