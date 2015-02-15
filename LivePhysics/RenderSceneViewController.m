@@ -28,7 +28,7 @@
     if(!_outScene )
     {
         self.outScene = [[RenderScene alloc] initWithSize:CGSizeMake(1280, 800)];
-        self.outScene.physicsWorld.gravity = CGVectorMake(0.f, 0.1f);
+        self.outScene.physicsWorld.gravity = CGVectorMake(0.f, 0.0f);
 //        self.outScene.scaleMode = SKSceneScaleModeAspectFit;
     }
     

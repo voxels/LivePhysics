@@ -11,15 +11,7 @@
 #import "CaptureTextureModel.h"
 #import "Keypoint.h"
 #import "DeadEffectNode.h"
-
-
-const NSInteger kOutSceneMaxCountours = 10;
-const NSInteger kOutSceneMaxSparks = 20;
-const NSInteger kOutSceneMaxFill = 15;
-const NSInteger kOutSceneMaxFields = 15;
-
-#define ADDPOINTS 1
-#define ADDCONTOURS 1
+#import "Constants.h"
 
 @interface RenderScene ()
 
@@ -128,6 +120,7 @@ const NSInteger kOutSceneMaxFields = 15;
 
     self.sparksNode = [[SKEffectNode alloc] init];
     self.sparksNode.zPosition = 3;
+    self.sparksNode.blendMode = SKBlendModeAdd;
     
     self.fillNode = [[SKEffectNode alloc] init];
     self.fillNode.zPosition = 1;
@@ -291,9 +284,16 @@ const NSInteger kOutSceneMaxFields = 15;
                     NSValue *thisValue = [points objectAtIndex:jj];
                     CGPoint point = CGPointMake((self.view.bounds.size.width - thisValue.pointValue.x)*2.f - 1280.f, (self.view.bounds.size.height - thisValue.pointValue.y)*2.f - 800.f);
                     
-                    SKSpriteNode *spriteNode = [self physicsSpriteWithPostion:point];
-//                    SKEmitterNode *emitterNode = [self trailsNodeWithPosition:point];
-                    [self.sparksNode addChild:spriteNode];
+                    if( jj %2 == 0 )
+                    {
+                        SKSpriteNode *spriteNode = [self physicsSpriteWithPostion:point];
+                        [self.sparksNode addChild:spriteNode];
+                    }
+                    else
+                    {
+                        SKEmitterNode *emitterNode = [self trailsNodeWithPosition:point];
+                        [self.sparksNode addChild:emitterNode];
+                    }
                 }
                 
                 if( kOutSceneMaxFields - (int)self.fieldsNode.children.count > 0 )
@@ -323,7 +323,7 @@ const NSInteger kOutSceneMaxFields = 15;
     SKPhysicsBody *body = [SKPhysicsBody bodyWithCircleOfRadius:1];
     spriteNode.physicsBody = body;
     
-    double val = ((double)arc4random_uniform(500)/1000);
+    double val = ((double)arc4random_uniform(12000)/1000);
     double rot = arc4random_uniform(5);
     SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
     SKAction *growAction = [SKAction scaleBy:4.0 duration:val];
@@ -345,10 +345,11 @@ const NSInteger kOutSceneMaxFields = 15;
     SKPhysicsBody *body = [SKPhysicsBody bodyWithCircleOfRadius:3];
     node.physicsBody = body;
 
-    double val = ((double)arc4random_uniform(6000)/1000);
-    SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
+    SKAction *waitAction = [SKAction waitForDuration:(double)arc4random_uniform(6000)/1000];
+    SKAction *fadeAction = [SKAction fadeOutWithDuration:(double)arc4random_uniform(2000)/1000];
+    
     SKAction *dieAction = [SKAction removeFromParent];
-    SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
+    SKAction *group = [SKAction sequence:@[waitAction, fadeAction, dieAction]];
     [node runAction:group];
     return node;
 }
@@ -412,7 +413,7 @@ const NSInteger kOutSceneMaxFields = 15;
     CGPoint point = CGPointMake((self.view.bounds.size.width - thisValue.pointValue.x)*2.f - 1280.f, (self.view.bounds.size.height - thisValue.pointValue.y)*2.f - 800.f);
     node.position = point;
     
-    double val = ((double)arc4random_uniform(8000)/1000);
+    double val = ((double)arc4random_uniform(2000)/1000);
     SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
     SKAction *dieAction = [SKAction removeFromParent];
     SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
@@ -424,6 +425,18 @@ const NSInteger kOutSceneMaxFields = 15;
 - (void) update:(NSTimeInterval)currentTime
 {
     [self.deadNode updateSpriteTexture:[self.view textureFromNode:self.liveNode crop:self.view.frame]];
+}
+
+- (void) didFinishUpdate
+{
+    for(SKNode *node in self.sparksNode.children )
+    {
+        if( ![self.cameraTextureSprite containsPoint:node.position] )
+        {
+            [node removeFromParent];
+        }
+    }
+    
 }
 
 - (void) handlePointsMoved:(NSNotification *)notification
