@@ -125,7 +125,10 @@
     CIVector *newBottomLeftVector = [CIVector vectorWithX:identityBottomLeftVector.X * bottomLeftScale.X  Y:identityBottomLeftVector.Y * bottomLeftScale.Y];
     CIVector *newBottomRightVector = [CIVector vectorWithX:identityBottomRightVector.X * bottomRightScale.X  Y:identityBottomRightVector.Y * bottomRightScale.Y];
     
-    NSLog(@"%@\t%@\t%@", topRightScale, identityTopRightVector, newTopRightVector);
+    [self.xFormFilter setValue:newTopLeftVector forKey:@"inputTopLeft"];
+    [self.xFormFilter setValue:newTopRightVector forKey:@"inputTopRight"];
+    [self.xFormFilter setValue:newBottomLeftVector forKey:@"inputBottomLeft"];
+    [self.xFormFilter setValue:newBottomRightVector forKey:@"inputBottomRight"];
 }
 
 @end
