@@ -138,7 +138,7 @@
     SKSpriteNode *coverNode = [[SKSpriteNode alloc] initWithColor:[SKColor blackColor] size:self.view.bounds.size];
     coverNode.position = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
     coverNode.zPosition = 1;
-    [self addChild: coverNode];
+//    [self addChild: coverNode];
 }
 
 
@@ -213,46 +213,49 @@
     {
         for( int ii = 0; ii < availableCount; ++ii )
         {
-            int randomPointIndex = arc4random_uniform((int)contours.count);
-
-            NSDictionary *thisContour = [contours objectAtIndex:randomPointIndex];
-            NSArray *points = thisContour[@"points"];
-            
-            NSValue *firstPointValue = [points firstObject];
-            NSPoint firstPoint = firstPointValue.pointValue;
-            CGPoint scalePoint =  CGPointMake((self.view.bounds.size.width - firstPoint.x) * 2.f - 1280.f, (self.view.bounds.size.height - firstPoint.y)*2.f - 800.f);
-            NSBezierPath *path = [NSBezierPath bezierPath];
-            [path moveToPoint:scalePoint];
-            
-            for( int ii = 1; ii < points.count; ++ii )
+            if(contours.count > 0 )
             {
-                NSValue *thisValue = [points objectAtIndex:ii];
-                float rX = (float)arc4random_uniform(10) - 5.f;
-                float rY = (float)arc4random_uniform(10) - 5.f;
-                CGPoint point = CGPointMake((self.view.bounds.size.width - thisValue.pointValue.x)*2.f - 1280.f + rX, (self.view.bounds.size.height - thisValue.pointValue.y)*2.f - 800.f + rY);
-                [path lineToPoint:point];
+                int randomPointIndex = arc4random_uniform((int)contours.count);
+                
+                NSDictionary *thisContour = [contours objectAtIndex:randomPointIndex];
+                NSArray *points = thisContour[@"points"];
+                
+                NSValue *firstPointValue = [points firstObject];
+                NSPoint firstPoint = firstPointValue.pointValue;
+                CGPoint scalePoint =  CGPointMake((self.view.bounds.size.width - firstPoint.x) * 2.f - 1280.f, (self.view.bounds.size.height - firstPoint.y)*2.f - 800.f);
+                NSBezierPath *path = [NSBezierPath bezierPath];
+                [path moveToPoint:scalePoint];
+                
+                for( int ii = 1; ii < points.count; ++ii )
+                {
+                    NSValue *thisValue = [points objectAtIndex:ii];
+                    float rX = (float)arc4random_uniform(10) - 5.f;
+                    float rY = (float)arc4random_uniform(10) - 5.f;
+                    CGPoint point = CGPointMake((self.view.bounds.size.width - thisValue.pointValue.x)*2.f - 1280.f + rX, (self.view.bounds.size.height - thisValue.pointValue.y)*2.f - 800.f + rY);
+                    [path lineToPoint:point];
+                }
+                
+                [path closePath];
+                
+                SKShapeNode *thisPath = [SKShapeNode shapeNodeWithPath:path.quartzPath];
+                
+                //            SKPhysicsBody *body = [SKPhysicsBody bodyWithEdgeChainFromPath:path.quartzPath];
+                //            thisPath.physicsBody = body;
+                thisPath.strokeColor = [SKColor colorWithWhite:1.f alpha:0.9f];
+                thisPath.lineWidth = 2.f;
+                thisPath.glowWidth = 3.f;
+                thisPath.zPosition = 5;
+                thisPath.lineCap = kCGLineCapRound;
+                thisPath.lineJoin = kCGLineJoinRound;
+                
+                double val = ((double)arc4random_uniform(8000)/1000);
+                SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
+                SKAction *dieAction = [SKAction removeFromParent];
+                SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
+                
+                [self.contoursNode addChild:thisPath];
+                [thisPath runAction:group];
             }
-            
-            [path closePath];
-            
-            SKShapeNode *thisPath = [SKShapeNode shapeNodeWithPath:path.quartzPath];
-
-//            SKPhysicsBody *body = [SKPhysicsBody bodyWithEdgeChainFromPath:path.quartzPath];
-//            thisPath.physicsBody = body;
-            thisPath.strokeColor = [SKColor colorWithWhite:1.f alpha:0.9f];
-            thisPath.lineWidth = 2.f;
-            thisPath.glowWidth = 3.f;
-            thisPath.zPosition = 5;
-            thisPath.lineCap = kCGLineCapRound;
-            thisPath.lineJoin = kCGLineJoinRound;
-            
-            double val = ((double)arc4random_uniform(8000)/1000);
-            SKAction *fadeAction = [SKAction fadeOutWithDuration:val];
-            SKAction *dieAction = [SKAction removeFromParent];
-            SKAction *group = [SKAction sequence:@[fadeAction, dieAction]];
-            
-            [self.contoursNode addChild:thisPath];
-            [thisPath runAction:group];
         }
     }
 }

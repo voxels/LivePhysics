@@ -25,6 +25,7 @@
 		1E76DEB61A787AA40073075F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E76DEB41A787AA40073075F /* Main.storyboard */; };
 		1E76DEC21A787AA40073075F /* LivePhysicsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DEC11A787AA40073075F /* LivePhysicsTests.m */; };
 		1E76DEDB1A78803D0073075F /* OCVSimpleBlobs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E76DED91A78803D0073075F /* OCVSimpleBlobs.cpp */; };
+		1E9B32281A96DA97004F65E5 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E9B32271A96DA97004F65E5 /* Accelerate.framework */; };
 		1EBDE3AB1A9007FF0058A5B1 /* SkewParamsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EBDE3AA1A9007FF0058A5B1 /* SkewParamsViewController.m */; };
 		1EBDE3AE1A900CA90058A5B1 /* SkewScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EBDE3AD1A900CA90058A5B1 /* SkewScene.m */; };
 		1EC1BD581A8FD10A00CB180C /* DeadEffectNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EC1BD571A8FD10A00CB180C /* DeadEffectNode.m */; };
@@ -85,6 +86,7 @@
 		1E76DEC11A787AA40073075F /* LivePhysicsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LivePhysicsTests.m; sourceTree = "<group>"; };
 		1E76DED91A78803D0073075F /* OCVSimpleBlobs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OCVSimpleBlobs.cpp; sourceTree = "<group>"; };
 		1E76DEDA1A78803D0073075F /* OCVSimpleBlobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCVSimpleBlobs.h; sourceTree = "<group>"; };
+		1E9B32271A96DA97004F65E5 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		1EBDE3A91A9007FF0058A5B1 /* SkewParamsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkewParamsViewController.h; sourceTree = "<group>"; };
 		1EBDE3AA1A9007FF0058A5B1 /* SkewParamsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SkewParamsViewController.m; sourceTree = "<group>"; };
 		1EBDE3AC1A900CA90058A5B1 /* SkewScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkewScene.h; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E9B32281A96DA97004F65E5 /* Accelerate.framework in Frameworks */,
 				1EDCE93B1A7CB9E70088BE13 /* libz.dylib in Frameworks */,
 				1EDCE9411A7CC13C0088BE13 /* libopencv_highgui.a in Frameworks */,
 				1EDCE93F1A7CBABE0088BE13 /* libcudart_static.a in Frameworks */,
@@ -167,6 +170,7 @@
 		1E76DE9C1A787AA40073075F = {
 			isa = PBXGroup;
 			children = (
+				1E9B32271A96DA97004F65E5 /* Accelerate.framework */,
 				1E76DEB41A787AA40073075F /* Main.storyboard */,
 				1E76DEA71A787AA40073075F /* LivePhysics */,
 				1E76DEBE1A787AA40073075F /* LivePhysicsTests */,

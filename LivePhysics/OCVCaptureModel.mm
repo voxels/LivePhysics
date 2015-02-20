@@ -154,15 +154,34 @@
     size_t bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(imageBuffer, 0);
     
     Pixel_8 *lumaBuffer = (Pixel_8*)CVPixelBufferGetBaseAddressOfPlane(imageBuffer, 0);
-    //    CGColorSpaceRef grayColorSpace = CGColorSpaceCreateDeviceGray();
-    //    CGContextRef context = CGBitmapContextCreate(lumaBuffer, width, height, 8, bytesPerRow, grayColorSpace, kCGImageAlphaNone);
     
+#if FLIPIMAGE
+    
+    const vImage_Buffer imagebuf = {lumaBuffer, height, width, bytesPerRow};
+    unsigned char *makeBuf = (unsigned char *)malloc( width * height * bytesPerRow );
+    const vImage_Buffer outbuf = {makeBuf, height, width, bytesPerRow};
+    
+    vImage_Flags flags = 0; // Flags for vImage function
+    vImage_Error err = vImageHorizontalReflect_Planar8(&imagebuf, &outbuf,
+                                                        flags  );
+    if (err!=kvImageNoError)
+    {
+        NSLog(@"vImageHorizontalReflect_Planar8 exited with code %ld",err);
+    }
+
+    cv::Mat grayImage((int)outbuf.height, (int)outbuf.width, CV_8U, outbuf.data, outbuf.rowBytes);
+    cv::Mat croppedRef(grayImage, cv::Rect(1920.f/2.f - 1280.f/2.f, 1080.f/2.f - 800.f/2.f, 1280.f, 800.f ));
+    cv::resize(grayImage, grayImage, cv::Size(640, 400));
+    
+    detect(grayImage, &keyPoints, &approxContours );
+#else
     vImage_Buffer imagebuf = {lumaBuffer, height, width, bytesPerRow};
     cv::Mat grayImage((int)imagebuf.height, (int)imagebuf.width, CV_8U, imagebuf.data, imagebuf.rowBytes);
     cv::Mat croppedRef(grayImage, cv::Rect(1920.f/2.f - 1280.f/2.f, 1080.f/2.f - 800.f/2.f, 1280.f, 800.f ));
     cv::resize(grayImage, grayImage, cv::Size(640, 400));
     
     detect(grayImage, &keyPoints, &approxContours );
+#endif
     
     cv::vector<cv::KeyPoint>::iterator it;
     
@@ -219,6 +238,17 @@
 {
     // CHANGE TO IOSURFACE / CIIMAGE
     
+//    CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+//    CVPixelBufferLockBaseAddress(imageBuffer,0);
+//    void *baseAddress = CVPixelBufferGetBaseAddress(imageBuffer);
+//    size_t bytesPerRow = CVPixelBufferGetBytesPerRow(imageBuffer);
+//    
+//    vImage_Buffer inBuff;
+//    inBuff.height = CVPixelBufferGetHeight(imageBuffer);;
+//    inBuff.width = CVPixelBufferGetWidth(imageBuffer);;
+//    inBuff.rowBytes = bytesPerRow;
+//    inBuff.data = baseAddress;
+
     CVImageBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
     CVPixelBufferLockBaseAddress(pixelBuffer, 0);
     
@@ -227,10 +257,11 @@
     //    unsigned long bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0);
     unsigned char *rowBase = (unsigned char *)CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
     
+    
     uint8_t *rgbBuffer = (uint8_t *)malloc(bufferWidth * bufferHeight * 4);
     uint8_t *yBuffer = rowBase;
-    
     int bytesPerPixel = 4;
+    
     // for each byte in the input buffer, fill in the output buffer with four bytes
     // the first byte is the Alpha channel, then the next three contain the same
     // value of the input buffer
@@ -244,6 +275,40 @@
         rgbBuffer[(y*bytesPerPixel)+3] = 0xff;
     }
     
+    vImage_Buffer inBuff;
+    inBuff.height = bufferHeight;
+    inBuff.width = bufferWidth;
+    inBuff.rowBytes = bufferWidth * 4;
+    inBuff.data = rgbBuffer;
+
+    
+#if FLIPIMAGE
+    uint8_t *outRGBBuffer = (uint8_t *)malloc(bufferWidth * bufferHeight * 4);
+    vImage_Buffer outBuff;
+    outBuff.height = bufferHeight;
+    outBuff.width = bufferWidth;
+    outBuff.rowBytes = bufferWidth * 4;
+    outBuff.data = outRGBBuffer;
+    
+    vImage_Flags flags = 0; // Flags for vImage function
+
+    vImage_Error err = vImageHorizontalReflect_ARGB8888(&inBuff, &outBuff,
+                                                       flags  );
+    if (err!=kvImageNoError)
+    {
+        NSLog(@"vImageHorizontalReflect_Planar8 exited with code %ld",err);
+    }
+
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
+    
+    [self.textureModel.cameraTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
+        memcpy(pixelData, outRGBBuffer, lengthInBytes);
+    }];
+    
+    free(rgbBuffer);
+
+    
+#else
     CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
     
     [self.textureModel.cameraTexture modifyPixelDataWithBlock:^(void *pixelData, size_t lengthInBytes) {
@@ -251,6 +316,7 @@
     }];
     
     free(rgbBuffer);
+#endif
 }
 
 
